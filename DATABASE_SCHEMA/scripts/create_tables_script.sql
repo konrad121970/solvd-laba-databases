@@ -1,5 +1,6 @@
-CREATE DATABASE IF NOT EXISTS solvd_database;
+-- DROP DATABASE solvd_database;
 
+CREATE DATABASE IF NOT EXISTS solvd_database;
 USE solvd_database;
 
 CREATE TABLE IF NOT EXISTS adresses
@@ -31,6 +32,15 @@ CREATE TABLE IF NOT EXISTS stocks
      PRIMARY KEY (id),
      CONSTRAINT fk_stocks_workshops_id FOREIGN KEY (workshops_id) REFERENCES
      workshops (id) ON DELETE CASCADE ON UPDATE no action
+  );
+  
+  CREATE TABLE IF NOT EXISTS products
+  (
+     id             SERIAL,
+     product_number VARCHAR(45) NOT NULL,
+     name           VARCHAR(45) NOT NULL,
+     price          DOUBLE NOT NULL,
+     PRIMARY KEY (id)
   );
 
 CREATE TABLE IF NOT EXISTS stocks_has_products
@@ -106,6 +116,13 @@ CREATE TABLE IF NOT EXISTS accounts
      CONSTRAINT fk_accounts_employees FOREIGN KEY (employees_id) REFERENCES
      employees (id) ON DELETE CASCADE ON UPDATE no action
   );
+  
+  CREATE TABLE IF NOT EXISTS roles
+  (
+     id   SERIAL,
+     name VARCHAR(45),
+     PRIMARY KEY (id)
+  ); 
 
 CREATE TABLE IF NOT EXISTS reoles_has_accounts
   (
@@ -146,22 +163,6 @@ CREATE TABLE IF NOT EXISTS vehicles
      PRIMARY KEY (id)
   );
 
-CREATE TABLE IF NOT EXISTS products
-  (
-     id             SERIAL,
-     product_number VARCHAR(45) NOT NULL,
-     name           VARCHAR(45) NOT NULL,
-     price          DOUBLE NOT NULL,
-     PRIMARY KEY (id)
-  );
-  
-CREATE TABLE IF NOT EXISTS roles
-  (
-     id   SERIAL,
-     name VARCHAR(45),
-     PRIMARY KEY (id)
-  ); 
-  
 CREATE TABLE IF NOT EXISTS service_orders
   (
      id           BIGINT UNSIGNED NOT NULL auto_increment,
