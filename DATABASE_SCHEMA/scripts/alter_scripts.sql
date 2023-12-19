@@ -13,5 +13,5 @@ ADD COLUMN age VARCHAR(100) NOT NULL;
 ALTER TABLE bonus_payments
 MODIFY COLUMN amount VARCHAR(100) NOT NULL;
 
-ALTER TABLE reoles_has_accounts
-RENAME TO roles_has_accounts;
+ALTER TABLE roles_has_accounts
+RENAME TO accounts_roles;

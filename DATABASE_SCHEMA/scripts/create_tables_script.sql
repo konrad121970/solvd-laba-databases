@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS accounts
      PRIMARY KEY (id)
   ); 
 
-CREATE TABLE IF NOT EXISTS reoles_has_accounts
+CREATE TABLE IF NOT EXISTS roles_has_accounts
   (
      roles_id    BIGINT UNSIGNED NOT NULL,
      accounts_id BIGINT UNSIGNED NOT NULL,
@@ -141,6 +141,21 @@ CREATE TABLE IF NOT EXISTS invoices
      total_price DOUBLE NOT NULL,
      PRIMARY KEY (id)
   );
+  
+  CREATE TABLE IF NOT EXISTS invoices_has_products (
+  invoices_id BIGINT UNSIGNED NOT NULL,
+  products_id BIGINT UNSIGNED,
+  PRIMARY KEY (invoices_id, products_id),
+  CONSTRAINT fk_invoices_has_products_invoices
+    FOREIGN KEY (invoices_id)
+    REFERENCES invoices (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_invoices_has_products_products
+    FOREIGN KEY (products_id)
+    REFERENCES products (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 CREATE TABLE IF NOT EXISTS customers
   (
@@ -172,6 +187,7 @@ CREATE TABLE IF NOT EXISTS service_orders
      invoices_id  BIGINT UNSIGNED NULL,
      workshop_id  BIGINT UNSIGNED NOT NULL,
      employees_id BIGINT UNSIGNED NOT NULL,
+     description VARCHAR(500) NOT NULL,
      PRIMARY KEY (id),
      
      CONSTRAINT fk_service_orders_vehicles FOREIGN KEY (vehicles_id) REFERENCES
