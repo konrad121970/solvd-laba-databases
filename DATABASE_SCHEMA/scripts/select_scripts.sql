@@ -94,9 +94,46 @@ from bonus_payments bp
 group by bp.description
 having average_bonus > 500;
 
--- show value of products in each stock
-select s.name, sum(p.price * count(p.id))
-from stocks s 
+-- show value of products in each stock higher than 2000
+select s.id as stock_id, s.name as stock_name, SUM(p.price * shp.count) as total_value
+from stocks s
 join stocks_has_products shp on s.id = shp.stocks_id
-join products p on p.id = shp.products_id;
+join products p on shp.products_id = p.id
+group by s.id , s.name
+having total_value > 2000;
 
+-- number of invoices for each customer
+SELECT c.name, COUNT(i.id) AS invoice_count
+FROM customers c
+JOIN service_orders so ON c.id = so.customers_id
+left JOIN invoices i on i.id = so.invoices_id
+GROUP BY c.name
+HAVING COUNT(i.id) >= 0;
+
+-- find employees that have been paid more than 100k 
+SELECT e.name, SUM(mp.amount) AS TotalPayments
+FROM employees e
+LEFT JOIN monthly_payments mp ON e.id = mp.employees_id
+GROUP BY e.name
+HAVING SUM(mp.amount) > 100000;
+
+-- **************************************************************
+-- 7 statements with aggregate functions + group by without having.
+
+-- find products in stocks with the highest price
+SELECT s.name, p.name, p.price AS max_price
+FROM products p
+JOIN stocks_has_products shp ON shp.products_id = p.id
+JOIN stocks s ON s.id = shp.stocks_id
+WHERE (p.price, shp.stocks_id) IN (
+    SELECT MAX(price), stocks_id
+    FROM products
+    JOIN stocks_has_products ON products.id = stocks_has_products.products_id
+    GROUP BY stocks_id
+)
+ORDER BY shp.stocks_id, max_price DESC;
+
+-- show number of invoices for each month
+SELECT monthname(date_time) AS month, COUNT(id) AS total_orders
+FROM invoices
+GROUP BY month;
