@@ -1,4 +1,4 @@
--- DROP DATABASE solvd_database;
+DROP DATABASE IF EXISTS solvd_database;
 
 CREATE DATABASE IF NOT EXISTS solvd_database;
 USE solvd_database;
@@ -85,9 +85,8 @@ CREATE TABLE IF NOT EXISTS contracts
 CREATE TABLE IF NOT EXISTS monthly_payments
   (
      id           BIGINT UNSIGNED NOT NULL auto_increment,
-     amount       VARCHAR(45) NOT NULL,
+     amount       DOUBLE NOT NULL,
      payment_date DATE NOT NULL,
-     salary       DOUBLE UNSIGNED NOT NULL,
      employees_id BIGINT UNSIGNED NOT NULL,
      PRIMARY KEY (id),
      CONSTRAINT fk_monthly_payments_employees FOREIGN KEY (employees_id)
