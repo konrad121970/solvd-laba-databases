@@ -1,37 +1,46 @@
+update stocks_has_products
+set    count = count + 5
+where  stocks_id = (select id
+                    from   stocks
+                    where  name = 'Shop')
+       and products_id = (select id
+                          from   products
+                          where  product_number = 'P002');
 
-UPDATE stocks_has_products
-SET count = count + 5
-WHERE stocks_id = (SELECT id FROM stocks WHERE name = 'Shop')
-AND products_id = (SELECT id FROM products WHERE product_number = 'P002');
+update roles
+set    name = 'Lead Mechanic'
+where  name = 'Mechanic';
 
-UPDATE roles
-SET name = 'Lead Mechanic'
-WHERE name = 'Mechanic';
+update accounts
+set    password = 'new_hashed_password'
+where  employees_id = (select id
+                       from   employees
+                       where  surname = 'Doe');
 
-UPDATE accounts
-SET password = 'new_hashed_password'
-WHERE employees_id = (SELECT id FROM employees WHERE surname = 'Doe');
+update contracts
+set    active = 0
+where  employees_id = (select id
+                       from   employees
+                       where  surname = 'Doe');
 
-UPDATE contracts
-SET active = 0
-WHERE employees_id = (SELECT id FROM employees WHERE surname = 'Doe');
+update accounts
+set    login = 'john_doe_123'
+where  employees_id = (select id
+                       from   employees
+                       where  surname = 'Doe');
 
-UPDATE accounts
-SET login = 'john_doe_123'
-WHERE employees_id = (SELECT id FROM employees WHERE surname = 'Doe');
+update workshops
+set    name = 'Auto garage'
+where  name = 'Pablo\'s Auto Repair';
 
-UPDATE workshops
-SET name = 'Auto garage'
-WHERE name = 'Pablo\'s Auto Repair';
+update adresses
+set    city = 'Warsaw',street = 'Main',postal_code = '20-123'
+where  city = 'Bialystok';
 
-UPDATE adresses
-SET city = 'Warsaw', street = 'Main', postal_code = '20-123'
-WHERE city = 'Bialystok';
+update employees
+set    name = 'Henry'
+where  surname = 'Doe';
 
-UPDATE employees
-SET name = 'Henry'
-WHERE surname = 'Doe';
-
-UPDATE employees
-SET phone_number = '987654321'
-WHERE surname = 'Doe';
+update employees
+set    phone_number = '987654321'
+where  surname = 'Doe'; 
