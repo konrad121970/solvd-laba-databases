@@ -1,5 +1,9 @@
 use solvd_database;
 
+-- 1 big statement to join all tables in the database (use at least 5 table relaited 
+-- to each other (exclude many-to-many connection table), use aliases for this 
+-- one and choose only necessary fields from tables).
+
 -- Select all service orders (also not completed)
 select so.date as Service_order_date, so.completed Service_order_completed, c.name as Customer_name, c.surname as Customer_surname, v.make as Vehicle_make, v.model as Vehicle_model, i.date_time as Invoice_Date, i.total_price as Invoice_Price, e.name as Assigned_employee_name, e.surname as Assigned_employee_surname
 from service_orders so
@@ -8,6 +12,7 @@ join vehicles v on so.vehicles_id = v.id
 join employees e on so.employees_id = e.id
 left join invoices i on so.invoices_id = i.id;
 
+-- 5 statements with left, right, inner  joins (use aliases for columns and tables).
 -- Select all service orders (only completed)
 select so.date as Service_order_date, so.completed Service_order_completed, c.name as Customer_name, c.surname as Customer_surname, v.make as Vehicle_make, v.model as Vehicle_model, i.date_time as Invoice_Date, i.total_price as Invoice_Price, e.name as Assigned_employee_name, e.surname as Assigned_employee_surname
 from service_orders so
