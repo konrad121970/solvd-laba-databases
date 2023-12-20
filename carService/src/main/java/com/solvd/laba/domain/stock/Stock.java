@@ -1,4 +1,4 @@
-package com.solvd.laba.domain;
+package com.solvd.laba.domain.stock;
 
 import java.util.List;
 

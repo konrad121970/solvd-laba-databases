@@ -1,4 +1,4 @@
-package com.solvd.laba.domain;
+package com.solvd.laba.domain.order;
 
 import java.sql.Timestamp;
 

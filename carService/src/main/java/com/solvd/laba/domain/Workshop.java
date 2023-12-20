@@ -1,6 +1,8 @@
 package com.solvd.laba.domain;
 
+import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.people.Employee;
+import com.solvd.laba.domain.stock.Stock;
 
 import java.util.List;
 

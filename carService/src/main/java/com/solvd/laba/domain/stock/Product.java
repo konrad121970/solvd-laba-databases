@@ -1,4 +1,4 @@
-package com.solvd.laba.domain;
+package com.solvd.laba.domain.stock;
 
 public class Product {
     private Long id;

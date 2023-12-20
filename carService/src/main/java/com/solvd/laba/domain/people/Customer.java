@@ -1,6 +1,6 @@
 package com.solvd.laba.domain.people;
 
-import com.solvd.laba.domain.ServiceOrder;
+import com.solvd.laba.domain.order.ServiceOrder;
 
 import java.util.List;
 
