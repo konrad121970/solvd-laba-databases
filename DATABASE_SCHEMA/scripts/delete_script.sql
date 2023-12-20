@@ -1,21 +1,25 @@
-DELETE FROM stocks_has_products WHERE products_id = 1;
 
-DELETE FROM stocks_has_products WHERE stocks_id = 1;
+-- delete all employees that don't have a contract
+DELETE FROM employees e
+WHERE NOT EXISTS (SELECT 1 FROM contracts c WHERE e.id = c.employees_id);
 
-DELETE FROM products WHERE id = 1;
+-- delete all adresses in Warsaw
+DELETE FROM adresses WHERE city = 'Warsaw';
 
-DELETE FROM employees WHERE workshop_id = 1;
+-- delete customer, his car and service orders
+DELETE customers, vehicles, service_orders
+FROM customers
+LEFT JOIN vehicles ON customers.id = vehicles.id
+LEFT JOIN service_orders ON customers.id = service_orders.customers_id
+WHERE customers.name = 'Ava' AND customers.surname = 'Clark';
 
-DELETE FROM stocks_has_products WHERE products_id = 4;
+-- delete one customer 
+DELETE FROM employees WHERE name = 'John' AND surname = 'Doe';
 
-DELETE FROM roles WHERE id = 1;
 
-DELETE FROM accounts WHERE employees_id = 1;
+DELETE stocks, products
+FROM stocks s
+join stocks_has_products shp on shp.stocks_id = s.id
+LEFT JOIN products p ON stocks.id = p.stock_id
+WHERE stocks.name = 'Warehouse A';
 
-DELETE FROM bonus_payments WHERE monthly_payments_id IN (SELECT id FROM monthly_payments WHERE employees_id = 2);
-
-DELETE FROM monthly_payments WHERE employees_id = 1;
-
-DELETE FROM contracts WHERE employees_id = 2;
-
-DELETE FROM employees WHERE id = 1;
