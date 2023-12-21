@@ -1,6 +1,6 @@
 package com.solvd.laba.domain.workshop;
 
-public class Adress {
+public class Address {
     private Long id;
     private String city;
     private String street;
@@ -45,5 +45,16 @@ public class Adress {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Adress{" +
+                "id=" + id +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", buildingNumber='" + buildingNumber + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }
