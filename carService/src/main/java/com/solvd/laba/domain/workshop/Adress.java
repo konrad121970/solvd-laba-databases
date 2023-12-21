@@ -1,4 +1,4 @@
-package com.solvd.laba.domain;
+package com.solvd.laba.domain.workshop;
 
 public class Adress {
     private Long id;

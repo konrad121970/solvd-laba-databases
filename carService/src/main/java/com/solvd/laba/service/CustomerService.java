@@ -1,4 +1,4 @@
 package com.solvd.laba.service;
 
-public interface CustomerService {
+public class CustomerService {
 }

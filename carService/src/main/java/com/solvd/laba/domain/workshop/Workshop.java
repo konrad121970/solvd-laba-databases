@@ -1,4 +1,4 @@
-package com.solvd.laba.domain;
+package com.solvd.laba.domain.workshop;
 
 import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.people.Employee;
