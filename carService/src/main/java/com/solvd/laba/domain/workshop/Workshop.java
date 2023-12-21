@@ -10,7 +10,7 @@ public class Workshop {
     private Long id;
     private String name;
     private String nip;
-    private Adress adress;
+    private Address address;
     private List<Employee> employees;
     private List<ServiceOrder> serviceOrders;
     private List<Stock> stocks;
@@ -39,12 +39,12 @@ public class Workshop {
         this.nip = nip;
     }
 
-    public Adress getAdress() {
-        return adress;
+    public Address getAdress() {
+        return address;
     }
 
-    public void setAdress(Adress adress) {
-        this.adress = adress;
+    public void setAdress(Address address) {
+        this.address = address;
     }
 
     public List<Employee> getEmployees() {

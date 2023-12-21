@@ -1,7 +1,7 @@
 package com.solvd.laba.dao.order;
 
-import com.solvd.laba.dao.GenericDAO;
+import com.solvd.laba.dao.CommonDAO;
 import com.solvd.laba.domain.order.ServiceOrder;
 
-public interface IServiceOrderDAO extends GenericDAO<ServiceOrder> {
+public interface IServiceOrderDAO extends CommonDAO<ServiceOrder> {
 }

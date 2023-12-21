@@ -1,21 +1,31 @@
 package com.solvd.laba;
 
-import com.solvd.laba.domain.workshop.Adress;
-import com.solvd.laba.service.workshop.IAdressService;
-import com.solvd.laba.service.workshop.impl.AdressServiceImpl;
+import com.solvd.laba.domain.workshop.Address;
+import com.solvd.laba.service.workshop.IAddressService;
+import com.solvd.laba.service.workshop.impl.AddressServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 public class Main {
+    private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     public static void main(String[] args) {
 
-        IAdressService adressService = new AdressServiceImpl();
+        IAddressService addressService = new AddressServiceImpl();
 
-        Adress adress = new Adress();
-        adress.setCity("Hajnowka");
-        adress.setStreet("Main");
-        adress.setBuildingNumber("123");
-        adress.setPostalCode("17-200");
+        Address address = new Address();
+        address.setCity("Hajnowka");
+        address.setStreet("Main");
+        address.setBuildingNumber("123");
+        address.setPostalCode("17-200");
 
-        adressService.createAdress(adress);
+        addressService.createAddress(address);
+
+        List<Address> addresses;
+        addresses = addressService.getAllAdresses();
+        addresses.forEach(address1 -> LOGGER.info(address1.toString()));
 
     }
 }

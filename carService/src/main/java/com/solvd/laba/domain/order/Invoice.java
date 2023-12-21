@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Invoice {
     private Long id;
-    private Timestamp date_time;
+    private Timestamp dateTime;
     private Double totalPrice;
     private List<Product> products;
 
@@ -19,12 +19,12 @@ public class Invoice {
         this.id = id;
     }
 
-    public Timestamp getDate_time() {
-        return date_time;
+    public Timestamp getDateTime() {
+        return dateTime;
     }
 
-    public void setDate_time(Timestamp date_time) {
-        this.date_time = date_time;
+    public void setDateTime(Timestamp dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Double getTotalPrice() {

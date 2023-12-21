@@ -1,4 +1,7 @@
 package com.solvd.laba.dao.people.impl;
 
-public abstract class PersonDAO {
+import com.solvd.laba.dao.people.IPersonDAO;
+import com.solvd.laba.domain.people.Person;
+
+public abstract class PersonDAO<T extends Person> implements IPersonDAO<T> {
 }
