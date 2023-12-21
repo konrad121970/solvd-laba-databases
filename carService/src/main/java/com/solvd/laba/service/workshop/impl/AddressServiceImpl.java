@@ -1,7 +1,7 @@
 package com.solvd.laba.service.workshop.impl;
 
-import com.solvd.laba.dao.workshop.IAddressDAO;
-import com.solvd.laba.dao.workshop.impl.AddressDAO;
+import com.solvd.laba.persistence.workshop.IAddressDAO;
+import com.solvd.laba.persistence.workshop.impl.AddressDAO;
 import com.solvd.laba.domain.workshop.Address;
 import com.solvd.laba.service.workshop.IAddressService;
 
