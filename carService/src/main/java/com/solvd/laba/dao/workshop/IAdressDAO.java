@@ -1,4 +1,7 @@
 package com.solvd.laba.dao.workshop;
 
-public interface IAdressDAO {
+import com.solvd.laba.dao.GenericDAO;
+import com.solvd.laba.domain.workshop.Adress;
+
+public interface IAdressDAO extends GenericDAO<Adress> {
 }

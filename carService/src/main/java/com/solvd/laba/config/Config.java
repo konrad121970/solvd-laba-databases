@@ -19,7 +19,7 @@ public enum Config {
             if (input == null) {
                 throw new RuntimeException("Sorry, unable to find config.properties");
             }
-            // load a properties file from class path, inside static method
+            // load properties from class path
             properties.load(input);
         } catch (Exception e) {
             e.printStackTrace();

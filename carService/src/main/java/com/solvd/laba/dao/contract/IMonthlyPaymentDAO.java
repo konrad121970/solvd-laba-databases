@@ -1,4 +1,7 @@
 package com.solvd.laba.dao.contract;
 
-public interface IMonthlyPaymentDAO {
+import com.solvd.laba.dao.GenericDAO;
+import com.solvd.laba.domain.contract.MonthlyPayment;
+
+public interface IMonthlyPaymentDAO extends GenericDAO<MonthlyPayment> {
 }
