@@ -8,7 +8,8 @@ public interface IAddressService {
 
     void createAddress(Address address);
 
-    Address getAdressById(Long id);
+    List<Address> getAllAddresses();
 
-    List<Address> getAllAdresses();
+    Address getAddressById(Long id);
+
 }

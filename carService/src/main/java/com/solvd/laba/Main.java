@@ -11,6 +11,7 @@ import java.util.List;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
+
     public static void main(String[] args) {
 
         IAddressService addressService = new AddressServiceImpl();
@@ -24,7 +25,7 @@ public class Main {
         addressService.createAddress(address);
 
         List<Address> addresses;
-        addresses = addressService.getAllAdresses();
+        addresses = addressService.getAllAddresses();
         addresses.forEach(address1 -> LOGGER.info(address1.toString()));
 
     }
