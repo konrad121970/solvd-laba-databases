@@ -6,7 +6,7 @@ import java.util.List;
 public class MonthlyPayment {
     private Long id;
     private Double amount;
-    private Date payment_date;
+    private Date paymentDate;
     private List<BonusPayment> bonusPaymentList;
 
     public Long getId() {
@@ -25,12 +25,12 @@ public class MonthlyPayment {
         this.amount = amount;
     }
 
-    public Date getPayment_date() {
-        return payment_date;
+    public Date getPaymentDate() {
+        return paymentDate;
     }
 
-    public void setPayment_date(Date payment_date) {
-        this.payment_date = payment_date;
+    public void setPaymentDate(Date paymentDate) {
+        this.paymentDate = paymentDate;
     }
 
     public List<BonusPayment> getBonusPaymentList() {
