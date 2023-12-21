@@ -1,6 +1,6 @@
-package com.solvd.laba.dao.account;
+package com.solvd.laba.persistence.account;
 
-import com.solvd.laba.dao.CommonDAO;
+import com.solvd.laba.persistence.CommonDAO;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
 

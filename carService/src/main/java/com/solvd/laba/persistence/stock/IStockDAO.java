@@ -1,6 +1,6 @@
-package com.solvd.laba.dao.stock;
+package com.solvd.laba.persistence.stock;
 
-import com.solvd.laba.dao.CommonDAO;
+import com.solvd.laba.persistence.CommonDAO;
 import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.domain.stock.Stock;
 

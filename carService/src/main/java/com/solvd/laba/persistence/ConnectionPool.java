@@ -1,4 +1,4 @@
-package com.solvd.laba.dao;
+package com.solvd.laba.persistence;
 
 import com.solvd.laba.config.Config;
 
@@ -27,17 +27,6 @@ public class ConnectionPool {
                 .forEach(index -> connectionList.add(createConnection()));
     }
 
-    private Connection createConnection() {
-        Connection connection;
-
-        try {
-            connection = DriverManager.getConnection(Config.URL.getValue(), Config.USER.getValue(), Config.PASSWORD.getValue());
-        } catch (SQLException e) {
-            throw new RuntimeException("Unable to create connection.", e);
-        }
-        return connection;
-    }
-
     public static ConnectionPool getInstance() {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
@@ -47,6 +36,17 @@ public class ConnectionPool {
             }
         }
         return instance;
+    }
+
+    private Connection createConnection() {
+        Connection connection;
+
+        try {
+            connection = DriverManager.getConnection(Config.URL.getValue(), Config.USER.getValue(), Config.PASSWORD.getValue());
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to create connection.", e);
+        }
+        return connection;
     }
 
     public synchronized Connection getConnection() {

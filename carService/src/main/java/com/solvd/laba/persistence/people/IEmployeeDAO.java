@@ -1,4 +1,4 @@
-package com.solvd.laba.dao.people;
+package com.solvd.laba.persistence.people;
 
 import com.solvd.laba.domain.people.Employee;
 

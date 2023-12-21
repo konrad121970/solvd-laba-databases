@@ -1,7 +1,7 @@
-package com.solvd.laba.dao.workshop.impl;
+package com.solvd.laba.persistence.workshop.impl;
 
-import com.solvd.laba.dao.ConnectionPool;
-import com.solvd.laba.dao.workshop.IWorkshopDAO;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.workshop.IWorkshopDAO;
 import com.solvd.laba.domain.workshop.Address;
 import com.solvd.laba.domain.workshop.Workshop;
 import org.apache.logging.log4j.LogManager;

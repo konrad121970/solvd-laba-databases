@@ -1,6 +1,6 @@
-package com.solvd.laba.dao.people.impl;
+package com.solvd.laba.persistence.people.impl;
 
-import com.solvd.laba.dao.people.IEmployeeDAO;
+import com.solvd.laba.persistence.people.IEmployeeDAO;
 import com.solvd.laba.domain.people.Employee;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

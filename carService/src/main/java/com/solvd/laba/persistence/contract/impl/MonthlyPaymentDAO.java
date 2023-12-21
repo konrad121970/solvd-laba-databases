@@ -1,4 +1,4 @@
-package com.solvd.laba.dao.contract.impl;
+package com.solvd.laba.persistence.contract.impl;
 
 import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.contract.MonthlyPayment;

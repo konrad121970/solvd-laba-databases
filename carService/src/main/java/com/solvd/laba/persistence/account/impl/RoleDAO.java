@@ -1,7 +1,7 @@
-package com.solvd.laba.dao.account.impl;
+package com.solvd.laba.persistence.account.impl;
 
-import com.solvd.laba.dao.ConnectionPool;
-import com.solvd.laba.dao.account.IRoleDAO;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.account.IRoleDAO;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
 import org.apache.logging.log4j.LogManager;
@@ -66,8 +66,8 @@ public class RoleDAO implements IRoleDAO {
     }
 
     @Override
-    public List < Role > getAll() {
-        List < Role > roles = new ArrayList < > ();
+    public List<Role> getAll() {
+        List<Role> roles = new ArrayList<>();
         Connection connection = CONNECTION_POOL.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY)) {
@@ -122,8 +122,8 @@ public class RoleDAO implements IRoleDAO {
     }
 
     @Override
-    public List < Account > getAccountsByRole(Role role) {
-        List < Account > accounts = new ArrayList < > ();
+    public List<Account> getAccountsByRole(Role role) {
+        List<Account> accounts = new ArrayList<>();
         Connection connection = CONNECTION_POOL.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ACCOUNTS_BY_ROLE_QUERY)) {

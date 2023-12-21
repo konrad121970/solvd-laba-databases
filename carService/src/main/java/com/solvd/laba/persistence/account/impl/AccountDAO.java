@@ -1,7 +1,7 @@
-package com.solvd.laba.dao.account.impl;
+package com.solvd.laba.persistence.account.impl;
 
-import com.solvd.laba.dao.ConnectionPool;
-import com.solvd.laba.dao.account.IAccountDAO;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.account.IAccountDAO;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
 import org.apache.logging.log4j.LogManager;
@@ -33,11 +33,12 @@ public class AccountDAO implements IAccountDAO {
     public void create(Account account) {
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY)) {
-
+            preparedStatement.setString(1, account.getLogin());
+            preparedStatement.setString(2, account.getPassword());
 
             preparedStatement.executeUpdate();
 
-            LOGGER.info("Address created: {}", account);
+            LOGGER.info("Account created: {}", account);
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -57,7 +58,10 @@ public class AccountDAO implements IAccountDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-
+                account = new Account();
+                account.setId(result.getLong("id"));
+                account.setLogin(result.getString("login"));
+                account.setPassword(result.getString("password"));
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -78,6 +82,9 @@ public class AccountDAO implements IAccountDAO {
 
             while (result.next()) {
                 Account account = new Account();
+                account.setId(result.getLong("id"));
+                account.setLogin(result.getString("login"));
+                account.setPassword(result.getString("password"));
 
                 accounts.add(account);
             }
@@ -133,11 +140,16 @@ public class AccountDAO implements IAccountDAO {
         Connection connection = CONNECTION_POOL.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_ROLE_TO_ACCOUNT_QUERY)) {
+            preparedStatement.setLong(1, role.getId());
+            preparedStatement.setLong(2, account.getId());
 
-            preparedStatement.setLong(1, account.getId());
-            preparedStatement.setLong(2, role.getId());
+            preparedStatement.executeUpdate();
+
+            LOGGER.info("Role {} added to Account {}", role.getName(), account.getLogin());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
         }
     }
 
