@@ -7,9 +7,13 @@ import com.solvd.laba.persistence.CommonDAO;
 import java.util.List;
 
 public interface IMonthlyPaymentDAO extends CommonDAO<MonthlyPayment> {
+    void create(MonthlyPayment monthlyPayment, Long employeesId);
+
     void update(MonthlyPayment monthlyPayment);
 
     void delete(Long id);
 
     List<BonusPayment> getBonusPaymentsByMonthlyPaymentId(Long monthlyPaymentId);
+
+    void addBonusPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment);
 }

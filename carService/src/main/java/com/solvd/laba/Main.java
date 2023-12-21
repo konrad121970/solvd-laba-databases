@@ -1,32 +1,43 @@
 package com.solvd.laba;
 
-import com.solvd.laba.domain.workshop.Address;
-import com.solvd.laba.service.workshop.IAddressService;
-import com.solvd.laba.service.workshop.impl.AddressServiceImpl;
+import com.solvd.laba.domain.contract.BonusPayment;
+import com.solvd.laba.domain.contract.MonthlyPayment;
+import com.solvd.laba.service.contract.IMonthlyPaymentsService;
+import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
+import java.sql.Date;
 import java.util.List;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
     public static void main(String[] args) {
+        IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
 
-        IAddressService addressService = new AddressServiceImpl();
+        MonthlyPayment monthlyPayment = new MonthlyPayment();
+        monthlyPayment.setAmount(1000.0);
+        monthlyPayment.setPaymentDate(new Date(2023, 11, 11));
 
-        Address address = new Address();
-        address.setCity("Hajnowka");
-        address.setStreet("Main");
-        address.setBuildingNumber("123");
-        address.setPostalCode("17-200");
+        BonusPayment bonusPayment = new BonusPayment();
+        bonusPayment.setAmount(200.0);
+        bonusPayment.setDescription("Bonus payment for good performance");
 
-        addressService.createAddress(address);
+        monthlyPaymentService.createMonthlyPayment(monthlyPayment, 1L);
+        monthlyPaymentService.addBonusPayment(monthlyPayment, bonusPayment);
 
-        List<Address> addresses;
-        addresses = addressService.getAllAddresses();
-        addresses.forEach(address1 -> LOGGER.info(address1.toString()));
+        MonthlyPayment retrievedMonthlyPayment = monthlyPaymentService.getMonthlyPaymentById(monthlyPayment.getId());
+        List<BonusPayment> retrievedMonthlyPaymentBonusList = monthlyPaymentService.getBonusPaymentsByMonthlyPaymentId(monthlyPayment.getId());
 
+        LOGGER.info("MonthlyPayment ID: {}", retrievedMonthlyPayment.getId());
+        LOGGER.info("Amount: {}", retrievedMonthlyPayment.getAmount());
+        LOGGER.info("BonusPayments:");
+        for (BonusPayment bp : retrievedMonthlyPaymentBonusList) {
+            LOGGER.info("  - BonusPayment ID: {}", bp.getId());
+            LOGGER.info("    Amount: {}", bp.getAmount());
+            LOGGER.info("    Description: {}", bp.getDescription());
+        }
     }
 }

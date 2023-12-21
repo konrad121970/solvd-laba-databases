@@ -8,32 +8,42 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String CREATE_QUERY = "INSERT INTO monthly_payments (amount, payment_date) VALUES (?, ?)";
+    private static final String CREATE_QUERY = "INSERT INTO monthly_payments (amount, payment_date, employees_id) VALUES (?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM monthly_payments WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM monthly_payments";
     private static final String GET_BONUS_PAYMENTS_BY_MONTHLY_PAYMENT_ID_QUERY =
-            "SELECT * FROM bonus_payments WHERE monthly_payment_id = ?";
+            "SELECT * FROM bonus_payments WHERE monthly_payments_id = ?";
     private static final String UPDATE_QUERY = "UPDATE monthly_payments SET amount = ?, payment_date = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM monthly_payments WHERE id = ?";
 
+    private static final String ADD_BONUS_PAYMENT_QUERY = "INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (?, ?, ?)";
+
+
     @Override
-    public void create(MonthlyPayment monthlyPayment) {
+    public void create(MonthlyPayment monthlyPayment, Long employeesId) {
         Connection connection = CONNECTION_POOL.getConnection();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setDouble(1, monthlyPayment.getAmount());
             preparedStatement.setDate(2, monthlyPayment.getPaymentDate());
+            preparedStatement.setLong(3, employeesId);
             preparedStatement.executeUpdate();
-            LOGGER.info("MonthlyPayment created: {}", monthlyPayment);
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+
+            if (generatedKeys.next()) {
+                long generatedId = generatedKeys.getLong(1);
+                monthlyPayment.setId(generatedId);
+                LOGGER.info("MonthlyPayment created with id: {}", generatedId);
+            } else {
+                LOGGER.warn("Failed to retrieve generated id for MonthlyPayment");
+            }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         } finally {
@@ -134,4 +144,25 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
         }
         return bonusPayments;
     }
+
+    @Override
+    public void addBonusPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment) {
+        Connection connection = CONNECTION_POOL.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_BONUS_PAYMENT_QUERY)) {
+            preparedStatement.setDouble(1, bonusPayment.getAmount());
+            preparedStatement.setString(2, bonusPayment.getDescription());
+            preparedStatement.setLong(3, monthlyPayment.getId());
+
+            preparedStatement.executeUpdate();
+
+            LOGGER.info("BonusPayment added to MonthlyPayment. MonthlyPayment ID: {}, BonusPayment ID: {}", monthlyPayment.getId(), bonusPayment.getId());
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+    }
+
 }

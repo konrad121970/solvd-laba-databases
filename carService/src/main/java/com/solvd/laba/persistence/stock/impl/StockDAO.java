@@ -1,9 +1,9 @@
 package com.solvd.laba.persistence.stock.impl;
 
-import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.stock.IStockDAO;
 import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.domain.stock.Stock;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.stock.IStockDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,6 +25,8 @@ public class StockDAO implements IStockDAO {
     private static final String DELETE_QUERY = "DELETE FROM stocks WHERE id = ?";
     private static final String GET_PRODUCTS_BY_STOCK_ID_QUERY =
             "SELECT p.* FROM products p JOIN stocks_products sp ON p.id = sp.product_id WHERE sp.stock_id = ?";
+    private static final String ADD_PRODUCT_TO_STOCK_QUERY = "INSERT INTO stocks_products (stock_id, product_id) VALUES (?, ?)";
+    private static final String REMOVE_PRODUCT_FROM_STOCK_QUERY = "DELETE FROM stocks_products WHERE stock_id = ? AND product_id = ?";
 
     @Override
     public void create(Stock stock) {
@@ -141,6 +143,42 @@ public class StockDAO implements IStockDAO {
         }
 
         return products;
+    }
+
+    @Override
+    public void addProductToStock(Long stockId, Long productId) {
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_PRODUCT_TO_STOCK_QUERY)) {
+            preparedStatement.setLong(1, stockId);
+            preparedStatement.setLong(2, productId);
+
+            preparedStatement.executeUpdate();
+
+            LOGGER.info("Product with id {} added to stock with id {}", productId, stockId);
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+    }
+
+    @Override
+    public void removeProductFromStock(Long stockId, Long productId) {
+        Connection connection = CONNECTION_POOL.getConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_PRODUCT_FROM_STOCK_QUERY)) {
+            preparedStatement.setLong(1, stockId);
+            preparedStatement.setLong(2, productId);
+
+            preparedStatement.executeUpdate();
+
+            LOGGER.info("Product with id {} removed from stock with id {}", productId, stockId);
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
     }
 
     private Stock mapResultSetToStock(ResultSet result) throws SQLException {

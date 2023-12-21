@@ -2,6 +2,7 @@ package com.solvd.laba.service.account.impl;
 
 import com.solvd.laba.domain.account.Role;
 import com.solvd.laba.persistence.account.IRoleDAO;
+import com.solvd.laba.persistence.account.impl.RoleDAO;
 import com.solvd.laba.service.account.IRoleService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,8 +14,8 @@ public class RoleService implements IRoleService {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final IRoleDAO roleDAO;
 
-    public RoleService(IRoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
+    public RoleService() {
+        this.roleDAO = new RoleDAO();
     }
 
     @Override

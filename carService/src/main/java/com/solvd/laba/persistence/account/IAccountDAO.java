@@ -1,12 +1,14 @@
 package com.solvd.laba.persistence.account;
 
-import com.solvd.laba.persistence.CommonDAO;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
+import com.solvd.laba.persistence.CommonDAO;
 
 import java.util.Set;
 
 public interface IAccountDAO extends CommonDAO<Account> {
+    void create(Account account);
+
     void update(Account account);
 
     void delete(Long id);

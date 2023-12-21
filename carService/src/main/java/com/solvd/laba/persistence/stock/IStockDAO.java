@@ -7,6 +7,8 @@ import com.solvd.laba.persistence.CommonDAO;
 import java.util.List;
 
 public interface IStockDAO extends CommonDAO<Stock> {
+    void create(Stock stock);
+
     void update(Stock stock);
 
     void delete(Long id);

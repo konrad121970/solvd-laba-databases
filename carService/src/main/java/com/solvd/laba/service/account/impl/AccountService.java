@@ -4,8 +4,9 @@ package com.solvd.laba.service.account.impl;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
 import com.solvd.laba.persistence.account.IAccountDAO;
-import com.solvd.laba.persistence.account.IRoleDAO;
+import com.solvd.laba.persistence.account.impl.AccountDAO;
 import com.solvd.laba.service.account.IAccountService;
+import com.solvd.laba.service.account.IRoleService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,11 +16,11 @@ import java.util.Set;
 public class AccountService implements IAccountService {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final IAccountDAO accountDAO;
-    private final IRoleDAO roleDAO;
+    private final IRoleService roleService;
 
-    public AccountService(IAccountDAO accountDAO, IRoleDAO roleDAO) {
-        this.accountDAO = accountDAO;
-        this.roleDAO = roleDAO;
+    public AccountService() {
+        this.accountDAO = new AccountDAO();
+        this.roleService = new RoleService();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public void addRoleToAccount(Account account, Role role) {
-        roleDAO.create(role); // Create role if not exists
+        roleService.createRole(role); // Create role if not exists
         accountDAO.addRoleToAccount(account, role);
         LOGGER.info("Role {} added to Account {}", role.getName(), account.getLogin());
     }
