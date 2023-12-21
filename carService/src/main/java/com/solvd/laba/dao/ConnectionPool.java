@@ -1,3 +1,5 @@
+package com.solvd.laba.dao;
+
 import com.solvd.laba.config.Config;
 
 import java.sql.Connection;
