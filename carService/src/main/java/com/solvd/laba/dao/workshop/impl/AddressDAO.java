@@ -21,6 +21,11 @@ public class AddressDAO implements IAddressDAO {
     private static final String CREATE_QUERY = "INSERT INTO adresses (city, street, building_number, postal_code) VALUES (?, ?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM adresses WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM adresses";
+    private static final String UPDATE_QUERY =
+            "UPDATE adresses SET city = ?, street = ?, building_number = ?, postal_code = ? WHERE id = ?";
+
+    private static final String DELETE_QUERY =
+            "DELETE FROM adresses WHERE id = ?";
 
     @Override
     public void create(Address address) {
@@ -51,9 +56,9 @@ public class AddressDAO implements IAddressDAO {
 
             preparedStatement.setLong(1, id);
 
-            ResultSet result =  preparedStatement.executeQuery();
+            ResultSet result = preparedStatement.executeQuery();
 
-            if(result.next()){
+            if (result.next()) {
                 address = new Address();
                 address.setId(result.getLong("id"));
                 address.setCity(result.getString("city"));
@@ -96,4 +101,47 @@ public class AddressDAO implements IAddressDAO {
 
         return addresses;
     }
+
+    @Override
+    public void update(Address address) {
+        Connection connection = CONNECTION_POOL.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                UPDATE_QUERY)) {
+
+            preparedStatement.setString(1, address.getCity());
+            preparedStatement.setString(2, address.getStreet());
+            preparedStatement.setString(3, address.getBuildingNumber());
+            preparedStatement.setString(4, address.getPostalCode());
+            preparedStatement.setLong(5, address.getId());
+
+            preparedStatement.executeUpdate();
+
+            LOGGER.info("Address updated: {}", address);
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+        Connection connection = CONNECTION_POOL.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_QUERY)) {
+            preparedStatement.setLong(1, id);
+
+            preparedStatement.executeUpdate();
+
+            LOGGER.info("Address deleted with id: {}", id);
+
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+    }
+
 }

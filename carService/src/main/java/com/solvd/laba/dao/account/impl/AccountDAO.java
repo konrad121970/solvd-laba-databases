@@ -13,7 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AccountDAO implements IAccountDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -22,10 +24,11 @@ public class AccountDAO implements IAccountDAO {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM accounts WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM accounts";
     private static final String ADD_ROLE_TO_ACCOUNT_QUERY = "INSERT INTO roles_has_accounts (roles_id, accounts_id) VALUES(?,?)";
-    private static final String GET_ROLES_BY_ACCOUNT_QUERY  ="SELECT r.* FROM roles r JOIN roles_has_accounts ra ON r.id = ra.roles_id WHERE ra.accounts_id = ?";
+    private static final String GET_ROLES_BY_ACCOUNT_QUERY = "SELECT r.* FROM roles r JOIN roles_has_accounts ra ON r.id = ra.roles_id WHERE ra.accounts_id = ?";
     private static final String DELETE_ROLE_FROM_ACCOUNT_QUERY = "DELETE FROM roles_has_accounts WHERE accounts_id = ? AND roles_id = ?";
-    private static final String DELETE_ACCOUNT_QUERY =  "DELETE FROM accounts WHERE id = ?";
-    private static final String UPDATE_ACCOUNT_QUERY =  "UPDATE accounts SET login = ?, password = ? WHERE id = ?";
+    private static final String DELETE_ACCOUNT_QUERY = "DELETE FROM accounts WHERE id = ?";
+    private static final String UPDATE_ACCOUNT_QUERY = "UPDATE accounts SET login = ?, password = ? WHERE id = ?";
+
     @Override
     public void create(Account account) {
         Connection connection = CONNECTION_POOL.getConnection();
@@ -51,9 +54,9 @@ public class AccountDAO implements IAccountDAO {
 
             preparedStatement.setLong(1, id);
 
-            ResultSet result =  preparedStatement.executeQuery();
+            ResultSet result = preparedStatement.executeQuery();
 
-            if(result.next()){
+            if (result.next()) {
 
             }
         } catch (SQLException e) {
@@ -126,10 +129,10 @@ public class AccountDAO implements IAccountDAO {
     }
 
     @Override
-    public void addRoleToAccount(Account account, Role role){
+    public void addRoleToAccount(Account account, Role role) {
         Connection connection = CONNECTION_POOL.getConnection();
 
-        try(PreparedStatement preparedStatement = connection.prepareStatement(ADD_ROLE_TO_ACCOUNT_QUERY)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_ROLE_TO_ACCOUNT_QUERY)) {
 
             preparedStatement.setLong(1, account.getId());
             preparedStatement.setLong(2, role.getId());
@@ -161,8 +164,8 @@ public class AccountDAO implements IAccountDAO {
     }
 
     @Override
-    public List<Role> getRolesByAccount(Account account) {
-        List<Role> roles = new ArrayList<>();
+    public Set<Role> getRolesByAccount(Account account) {
+        Set<Role> roles = new HashSet<>();
         Connection connection = CONNECTION_POOL.getConnection();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ROLES_BY_ACCOUNT_QUERY)) {

@@ -1,12 +1,12 @@
 package com.solvd.laba.domain.account;
 
-import java.util.List;
+import java.util.Set;
 
 public class Account {
     private Long id;
     private String login;
     private String password;
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -32,11 +32,11 @@ public class Account {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
