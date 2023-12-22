@@ -13,31 +13,32 @@ import java.util.List;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
+    static IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
 
     public static void main(String[] args) {
-        IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
+
 
         MonthlyPayment monthlyPayment = new MonthlyPayment();
         monthlyPayment.setAmount(1000.0);
         monthlyPayment.setPaymentDate(new Date(2023, 11, 11));
+        monthlyPaymentService.createMonthlyPayment(monthlyPayment, 1L);
 
         BonusPayment bonusPayment = new BonusPayment();
         bonusPayment.setAmount(200.0);
         bonusPayment.setDescription("Bonus payment for good performance");
+        monthlyPaymentService.addBonusPaymentToMonthlyPayment(monthlyPayment, bonusPayment);
 
-        monthlyPaymentService.createMonthlyPayment(monthlyPayment, 1L);
-        monthlyPaymentService.addBonusPayment(monthlyPayment, bonusPayment);
+        List<BonusPayment> retrievedMonthlyPaymentBonusList = monthlyPaymentService.getBonusPaymentsByMonthlyPayment(monthlyPayment);
 
-        MonthlyPayment retrievedMonthlyPayment = monthlyPaymentService.getMonthlyPaymentById(monthlyPayment.getId());
-        List<BonusPayment> retrievedMonthlyPaymentBonusList = monthlyPaymentService.getBonusPaymentsByMonthlyPaymentId(monthlyPayment.getId());
-
-        LOGGER.info("MonthlyPayment ID: {}", retrievedMonthlyPayment.getId());
-        LOGGER.info("Amount: {}", retrievedMonthlyPayment.getAmount());
+        LOGGER.info("MonthlyPayment ID: {}", monthlyPayment.getId());
+        LOGGER.info("Amount: {}", monthlyPayment.getAmount());
         LOGGER.info("BonusPayments:");
-        for (BonusPayment bp : retrievedMonthlyPaymentBonusList) {
+
+        retrievedMonthlyPaymentBonusList.forEach(bp -> {
             LOGGER.info("  - BonusPayment ID: {}", bp.getId());
             LOGGER.info("    Amount: {}", bp.getAmount());
             LOGGER.info("    Description: {}", bp.getDescription());
-        }
+        });
+
     }
 }

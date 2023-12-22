@@ -16,8 +16,8 @@ public class BonusPaymentService implements IBonusPaymentService {
     }
 
     @Override
-    public void createBonusPayment(BonusPayment bonusPayment) {
-        bonusPaymentDAO.create(bonusPayment);
+    public void createBonusPayment(BonusPayment bonusPayment, Long monthlyPaymentId) {
+        bonusPaymentDAO.create(bonusPayment, monthlyPaymentId);
     }
 
     @Override
@@ -43,4 +43,10 @@ public class BonusPaymentService implements IBonusPaymentService {
     public void deleteBonusPayment(Long id) {
         bonusPaymentDAO.delete(id);
     }
+
+    @Override
+    public List<BonusPayment> getBonusPaymentsAssignedToMonthlyPayment(Long id) {
+        return bonusPaymentDAO.getBonusPaymentsByMonthlyPaymentId(id);
+    }
+
 }

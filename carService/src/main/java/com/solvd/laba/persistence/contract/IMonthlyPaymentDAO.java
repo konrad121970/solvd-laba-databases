@@ -1,10 +1,7 @@
 package com.solvd.laba.persistence.contract;
 
-import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.persistence.CommonDAO;
-
-import java.util.List;
 
 public interface IMonthlyPaymentDAO extends CommonDAO<MonthlyPayment> {
     void create(MonthlyPayment monthlyPayment, Long employeesId);
@@ -13,7 +10,7 @@ public interface IMonthlyPaymentDAO extends CommonDAO<MonthlyPayment> {
 
     void delete(Long id);
 
-    List<BonusPayment> getBonusPaymentsByMonthlyPaymentId(Long monthlyPaymentId);
-
-    void addBonusPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment);
+    /*    List<BonusPayment> getBonusPaymentsByMonthlyPaymentId(Long monthlyPaymentId);*/
+/*
+    void addBonusPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment);*/
 }

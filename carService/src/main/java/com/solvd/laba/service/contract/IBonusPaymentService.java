@@ -5,7 +5,7 @@ import com.solvd.laba.domain.contract.BonusPayment;
 import java.util.List;
 
 public interface IBonusPaymentService {
-    void createBonusPayment(BonusPayment bonusPayment);
+    void createBonusPayment(BonusPayment bonusPayment, Long monthlyPaymentId);
 
     BonusPayment getBonusPaymentById(Long id);
 
@@ -14,4 +14,6 @@ public interface IBonusPaymentService {
     void updateBonusPayment(BonusPayment bonusPayment);
 
     void deleteBonusPayment(Long id);
+
+    List<BonusPayment> getBonusPaymentsAssignedToMonthlyPayment(Long id);
 }

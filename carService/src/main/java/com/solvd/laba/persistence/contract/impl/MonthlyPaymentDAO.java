@@ -1,6 +1,5 @@
 package com.solvd.laba.persistence.contract.impl;
 
-import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.persistence.ConnectionPool;
 import com.solvd.laba.persistence.contract.IMonthlyPaymentDAO;
@@ -18,12 +17,9 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
     private static final String CREATE_QUERY = "INSERT INTO monthly_payments (amount, payment_date, employees_id) VALUES (?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM monthly_payments WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM monthly_payments";
-    private static final String GET_BONUS_PAYMENTS_BY_MONTHLY_PAYMENT_ID_QUERY =
-            "SELECT * FROM bonus_payments WHERE monthly_payments_id = ?";
+    /*    private static final String GET_BONUS_PAYMENTS_BY_MONTHLY_PAYMENT_ID_QUERY = "SELECT * FROM bonus_payments WHERE monthly_payments_id = ?";*/
     private static final String UPDATE_QUERY = "UPDATE monthly_payments SET amount = ?, payment_date = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM monthly_payments WHERE id = ?";
-
-    private static final String ADD_BONUS_PAYMENT_QUERY = "INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (?, ?, ?)";
 
 
     @Override
@@ -123,7 +119,7 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
         }
     }
 
-    @Override
+/*    @Override
     public List<BonusPayment> getBonusPaymentsByMonthlyPaymentId(Long monthlyPaymentId) {
         List<BonusPayment> bonusPayments = new ArrayList<>();
         Connection connection = CONNECTION_POOL.getConnection();
@@ -143,9 +139,9 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
             CONNECTION_POOL.releaseConnection(connection);
         }
         return bonusPayments;
-    }
+    }*/
 
-    @Override
+/*    @Override
     public void addBonusPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment) {
         Connection connection = CONNECTION_POOL.getConnection();
 
@@ -163,6 +159,6 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-    }
+    }*/
 
 }
