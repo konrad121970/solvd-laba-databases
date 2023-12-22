@@ -59,10 +59,7 @@ public class ConnectionPool {
             }
         }
 
-        Connection connection = connectionList.remove(connectionList.size() - 1);
-        connection = createConnection();
-
-        return connection;
+        return connectionList.remove(connectionList.size() - 1);
     }
 
     public synchronized void releaseConnection(Connection connection) {
