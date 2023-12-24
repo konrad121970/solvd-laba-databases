@@ -65,7 +65,7 @@ public class ConnectionPool {
     public synchronized void releaseConnection(Connection connection) {
         synchronized (connectionList) {
             connectionList.add(connection);
-            notify(); // Notify waiting threads that a connection is available
+            notifyAll(); // Notify waiting threads that a connection is available
         }
     }
 

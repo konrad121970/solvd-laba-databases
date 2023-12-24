@@ -8,30 +8,30 @@
 
         </Console>
 
-        <RollingFile name="fileLogger"
-                     fileName="target/logs/app.log"
-                     filePattern="logs/app-%d{yyyy-MM-dd}.log">
+        <!--        <RollingFile name="fileLogger"
+                             fileName="target/logs/app.log"
+                             filePattern="logs/app-%d{yyyy-MM-dd}.log">
 
-            <PatternLayout>
-                <pattern>
-                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
-                </pattern>
-            </PatternLayout>
+                    <PatternLayout>
+                        <pattern>
+                            [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                        </pattern>
+                    </PatternLayout>
 
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="1MB"/>
-            </Policies>
+                    <Policies>
+                        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                        <SizeBasedTriggeringPolicy size="1MB"/>
+                    </Policies>
 
-            <!-- Max 10 files will be created everyday -->
-            <DefaultRolloverStrategy max="10">
-                <Delete basePath="logs" maxDepth="10">
-                    <!-- Delete all files older than 3 days -->
-                    <IfLastModified age="3d"/>
-                </Delete>
-            </DefaultRolloverStrategy>
+                    &lt;!&ndash; Max 10 files will be created everyday &ndash;&gt;
+                    <DefaultRolloverStrategy max="10">
+                        <Delete basePath="logs" maxDepth="10">
+                            &lt;!&ndash; Delete all files older than 3 days &ndash;&gt;
+                            <IfLastModified age="3d"/>
+                        </Delete>
+                    </DefaultRolloverStrategy>
 
-        </RollingFile>
+                </RollingFile>-->
 
     </Appenders>
 
