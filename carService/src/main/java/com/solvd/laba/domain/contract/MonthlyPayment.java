@@ -8,7 +8,7 @@ public class MonthlyPayment {
     private Double amount;
     private Date paymentDate;
     private List<BonusPayment> bonusPaymentList;
-
+    
     public Long getId() {
         return id;
     }

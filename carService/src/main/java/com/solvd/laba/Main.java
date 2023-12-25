@@ -1,52 +1,50 @@
 package com.solvd.laba;
 
-import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
+import com.solvd.laba.domain.contract.BonusPayment;
+import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
+import java.sql.Date;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
-    static IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
+
 
     public static void main(String[] args) {
 
+        IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
 
-/*        MonthlyPayment monthlyPayment = new MonthlyPayment();
-        monthlyPayment.setAmount(1000.0);
-        monthlyPayment.setPaymentDate(new Date(2023, 11, 11));
-        monthlyPaymentService.createMonthlyPayment(monthlyPayment, 1L);
 
-        BonusPayment bonusPayment = new BonusPayment();
-        bonusPayment.setAmount(200.0);
-        bonusPayment.setDescription("Bonus payment for good performance");
-        monthlyPaymentService.addBonusPaymentToMonthlyPayment(monthlyPayment, bonusPayment);
+        MonthlyPayment monthlyPayment1 = new MonthlyPayment();
+        monthlyPayment1.setAmount(1000.0);
+        monthlyPayment1.setPaymentDate(new Date(2023 - 1900, 0, 9));
+        monthlyPaymentService.createMonthlyPayment(monthlyPayment1, 1L);
 
-        List<BonusPayment> retrievedMonthlyPaymentBonusList = monthlyPaymentService.getBonusPaymentsByMonthlyPayment(monthlyPayment);
+        BonusPayment bonusPayment2 = new BonusPayment();
+        bonusPayment2.setAmount(200.0);
+        bonusPayment2.setDescription("Bonus payment for good performance");
+        monthlyPaymentService.addBonusPaymentToMonthlyPayment(monthlyPayment1, bonusPayment2);
 
-        LOGGER.info("MonthlyPayment ID: {}", monthlyPayment.getId());
-        LOGGER.info("Amount: {}", monthlyPayment.getAmount());
-        LOGGER.info("BonusPayments:");
 
-        retrievedMonthlyPaymentBonusList.forEach(bp -> {
-            LOGGER.info("  - BonusPayment ID: {}", bp.getId());
-            LOGGER.info("    Amount: {}", bp.getAmount());
-            LOGGER.info("    Description: {}", bp.getDescription());
-        });*/
-
-        MonthlyPaymentDAO monthlyPaymentDAO = new MonthlyPaymentDAO();
-        MonthlyPaymentService monthlyPaymentService = new MonthlyPaymentService();
-
-        // Przykład użycia: pobieranie wszystkich płatności miesięcznych dla pracownika o ID 1
         Long employeeId = 1L;
-        System.out.println("Monthly Payments for Employee ID " + employeeId + ":");
+        System.out.println("Monthly Payments with Bonuses for Employee ID " + employeeId + ":");
         monthlyPaymentService.getAllMonthlyPaymentsByEmployeeId(employeeId)
-                .forEach(monthlyPayment -> System.out.println("ID: " + monthlyPayment.getId()
-                        + ", Amount: " + monthlyPayment.getAmount()
-                        + ", Payment Date: " + monthlyPayment.getPaymentDate()));
+                .forEach(monthlyPayment -> {
+                    System.out.println("\nMonthly Payment ID: " + monthlyPayment.getId()
+                            + ", Amount: " + monthlyPayment.getAmount()
+                            + ", Payment Date: " + monthlyPayment.getPaymentDate());
+
+                    if (!monthlyPayment.getBonusPaymentList().isEmpty()) {
+                        monthlyPayment.getBonusPaymentList().forEach(bonusPayment ->
+                                System.out.println("  - Bonus Payment ID: " + bonusPayment.getId()
+                                        + ", Amount: " + bonusPayment.getAmount()
+                                        + ", Description: " + bonusPayment.getDescription()));
+                    }
+                });
     }
-    
+
 }

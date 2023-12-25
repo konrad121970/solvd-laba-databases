@@ -27,14 +27,16 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
     public static List<BonusPayment> mapRow(ResultSet resultSet, List<BonusPayment> bonusPayments) throws SQLException {
         Long id = resultSet.getLong("bonus_payment_id");
 
+        if (bonusPayments == null) {
+            bonusPayments = new ArrayList<>();
+        }
+
         if (id != 0) {
-            if (bonusPayments == null) {
-                bonusPayments = new ArrayList<>();
-            }
 
             BonusPayment bonusPayment = findById(id, bonusPayments);
             bonusPayment.setAmount(resultSet.getDouble("bonus_payment_amount"));
             bonusPayment.setDescription(resultSet.getString("bonus_payment_description"));
+            
         }
         return bonusPayments;
     }
