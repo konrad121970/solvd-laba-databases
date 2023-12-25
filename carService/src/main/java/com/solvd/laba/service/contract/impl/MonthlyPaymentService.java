@@ -23,6 +23,13 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
     @Override
     public void createMonthlyPayment(MonthlyPayment monthlyPayment, Long employeeId) {
         monthlyPaymentDAO.create(monthlyPayment, employeeId);
+
+        if (!monthlyPayment.getBonusPaymentList().isEmpty()) {
+            monthlyPayment.getBonusPaymentList()
+                    .forEach(bonusPayment -> {
+                        bonusPaymentService.createBonusPayment(bonusPayment, monthlyPayment.getId());
+                    });
+        }
     }
 
     @Override
