@@ -1,8 +1,11 @@
 package com.solvd.laba;
 
 import com.solvd.laba.domain.contract.BonusPayment;
+import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.domain.contract.MonthlyPayment;
+import com.solvd.laba.service.contract.IContractService;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
+import com.solvd.laba.service.contract.impl.ContractService;
 import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +20,7 @@ public class Main {
     public static void main(String[] args) {
 
         IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
+        IContractService contractService = new ContractService();
 
 
         MonthlyPayment monthlyPayment1 = new MonthlyPayment();
@@ -45,6 +49,9 @@ public class Main {
                                         + ", Description: " + bonusPayment.getDescription()));
                     }
                 });
-    }
 
+        Contract contract = contractService.getContractById(1L);
+
+        System.out.println(contract);
+    }
 }

@@ -1,6 +1,7 @@
 package com.solvd.laba.domain.contract;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MonthlyPayment {
@@ -8,7 +9,11 @@ public class MonthlyPayment {
     private Double amount;
     private Date paymentDate;
     private List<BonusPayment> bonusPaymentList;
-    
+
+    public MonthlyPayment() {
+        bonusPaymentList = new ArrayList<>();
+    }
+
     public Long getId() {
         return id;
     }
