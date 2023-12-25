@@ -1,7 +1,7 @@
 package com.solvd.laba.persistence.people.impl;
 
-import com.solvd.laba.persistence.people.ICustomerDAO;
 import com.solvd.laba.domain.people.Customer;
+import com.solvd.laba.persistence.people.ICustomerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +19,11 @@ public class CustomerDAO extends PersonDAO<Customer> implements ICustomerDAO {
     @Override
     public Customer getById(Long id) {
         return null;
+    }
+
+    @Override
+    public void update(Customer object) {
+
     }
 
     @Override

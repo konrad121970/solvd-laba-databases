@@ -26,11 +26,6 @@ public class BonusPaymentService implements IBonusPaymentService {
         return bonusPaymentDAO.getById(id);
     }
 
-    @Override
-
-    public List<BonusPayment> getAllBonusPayments() {
-        return bonusPaymentDAO.getAll();
-    }
 
     @Override
 

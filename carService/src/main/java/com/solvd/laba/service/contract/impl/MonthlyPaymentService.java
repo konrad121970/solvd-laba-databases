@@ -31,11 +31,6 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
         return monthlyPaymentDAO.getById(id);
     }
 
-    @Override
-
-    public List<MonthlyPayment> getAllMonthlyPayments() {
-        return monthlyPaymentDAO.getAll();
-    }
 
     @Override
 
@@ -48,6 +43,11 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
     public void deleteMonthlyPayment(Long id) {
         monthlyPaymentDAO.delete(id);
     }
+
+    public List<MonthlyPayment> getAllMonthlyPaymentsByEmployeeId(Long employeeId) {
+        return monthlyPaymentDAO.getAllMonthlyPaymentsByEmployeeId(employeeId);
+    }
+
 
     @Override
     public List<BonusPayment> getBonusPaymentsByMonthlyPayment(MonthlyPayment monthlyPayment) {

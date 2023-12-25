@@ -19,10 +19,36 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM bonus_payments WHERE id = ?";
-    private static final String GET_ALL_QUERY = "SELECT * FROM bonus_payments";
+    /*   private static final String GET_ALL_QUERY = "SELECT * FROM bonus_payments";*/
     private static final String UPDATE_QUERY = "UPDATE bonus_payments SET amount = ?, description = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM bonus_payments WHERE id = ?";
     private static final String GET_BONUS_PAYMENTS_BY_MONTHLY_PAYMENT_ID_QUERY = "SELECT * FROM bonus_payments WHERE monthly_payments_id = ?";
+
+    public static List<BonusPayment> mapRow(ResultSet resultSet, List<BonusPayment> bonusPayments) throws SQLException {
+        Long id = resultSet.getLong("bonus_payment_id");
+
+        if (id != 0) {
+            if (bonusPayments == null) {
+                bonusPayments = new ArrayList<>();
+            }
+
+            BonusPayment bonusPayment = findById(id, bonusPayments);
+            bonusPayment.setAmount(resultSet.getDouble("bonus_payment_amount"));
+            bonusPayment.setDescription(resultSet.getString("bonus_payment_description"));
+        }
+        return bonusPayments;
+    }
+
+    private static BonusPayment findById(Long id, List<BonusPayment> bonusPayments) {
+        return bonusPayments.stream().filter(bonusPayment -> bonusPayment.getId().equals(id))
+                .findFirst()
+                .orElseGet(() -> {
+                    BonusPayment newBonusPayment = new BonusPayment();
+                    newBonusPayment.setId(id);
+                    bonusPayments.add(newBonusPayment);
+                    return newBonusPayment;
+                });
+    }
 
     @Override
     public void create(BonusPayment bonusPayment, Long monthlyPaymentId) {
@@ -46,14 +72,17 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
     @Override
     public BonusPayment getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        BonusPayment bonusPayment = null;
+        BonusPayment bonusPayment = new BonusPayment();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY)) {
             preparedStatement.setLong(1, id);
 
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-                bonusPayment = mapBonusPayment(result);
+                bonusPayment.setId(result.getLong("id"));
+                bonusPayment.setAmount(result.getDouble("amount"));
+                bonusPayment.setDescription(result.getString("description"));
+
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -62,27 +91,6 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
         }
 
         return bonusPayment;
-    }
-
-    @Override
-    public List<BonusPayment> getAll() {
-        List<BonusPayment> bonusPayments = new ArrayList<>();
-        Connection connection = CONNECTION_POOL.getConnection();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY)) {
-            ResultSet result = preparedStatement.executeQuery();
-
-            while (result.next()) {
-                BonusPayment bonusPayment = mapBonusPayment(result);
-                bonusPayments.add(bonusPayment);
-            }
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-
-        return bonusPayments;
     }
 
     @Override
@@ -146,11 +154,4 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
     }
 
 
-    private BonusPayment mapBonusPayment(ResultSet resultSet) throws SQLException {
-        BonusPayment bonusPayment = new BonusPayment();
-        bonusPayment.setId(resultSet.getLong("id"));
-        bonusPayment.setAmount(resultSet.getDouble("amount"));
-        bonusPayment.setDescription(resultSet.getString("description"));
-        return bonusPayment;
-    }
 }
