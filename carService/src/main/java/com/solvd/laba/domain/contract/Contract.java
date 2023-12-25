@@ -57,4 +57,16 @@ public class Contract {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "Contract{" +
+                "id=" + id +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", type='" + type + '\'' +
+                ", salary=" + salary +
+                ", active=" + active +
+                '}';
+    }
 }
