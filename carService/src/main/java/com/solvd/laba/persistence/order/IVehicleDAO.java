@@ -9,6 +9,8 @@ import java.util.List;
 public interface IVehicleDAO extends CommonDAO<Vehicle> {
     void create(Vehicle vehicle);
 
+    List<Vehicle> getAll();
+
     void update(Vehicle vehicle);
 
     void delete(Long id);

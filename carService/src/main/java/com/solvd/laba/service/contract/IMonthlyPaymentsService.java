@@ -10,7 +10,6 @@ public interface IMonthlyPaymentsService {
 
     MonthlyPayment getMonthlyPaymentById(Long id);
 
-    List<MonthlyPayment> getAllMonthlyPayments();
 
     void updateMonthlyPayment(MonthlyPayment monthlyPayment);
 

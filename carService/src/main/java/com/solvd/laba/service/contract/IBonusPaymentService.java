@@ -9,7 +9,6 @@ public interface IBonusPaymentService {
 
     BonusPayment getBonusPaymentById(Long id);
 
-    List<BonusPayment> getAllBonusPayments();
 
     void updateBonusPayment(BonusPayment bonusPayment);
 

@@ -9,6 +9,8 @@ import java.util.List;
 public interface IInvoiceDAO extends CommonDAO<Invoice> {
     void create(Invoice invoice);
 
+    List<Invoice> getAll();
+
     void update(Invoice invoice);
 
     void delete(Long id);

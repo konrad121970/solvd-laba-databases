@@ -9,6 +9,8 @@ import java.util.List;
 public interface IRoleDAO extends CommonDAO<Role> {
     void create(Role role);
 
+    List<Role> getAll();
+
     void update(Role role);
 
     void delete(Long id);

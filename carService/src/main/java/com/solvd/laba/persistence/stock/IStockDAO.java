@@ -9,6 +9,8 @@ import java.util.List;
 public interface IStockDAO extends CommonDAO<Stock> {
     void create(Stock stock);
 
+    List<Stock> getAll();
+
     void update(Stock stock);
 
     void delete(Long id);
