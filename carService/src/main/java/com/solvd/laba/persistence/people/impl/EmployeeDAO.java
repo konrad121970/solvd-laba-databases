@@ -1,7 +1,11 @@
 package com.solvd.laba.persistence.people.impl;
 
+import com.solvd.laba.domain.contract.Contract;
+import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.contract.impl.ContractDAO;
+import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,10 +22,76 @@ public class EmployeeDAO implements IEmployeeDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO employees (workshop_id, name, surname, phone_number, position) VALUES (?, ?, ?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM employees WHERE id = ?";
-    private static final String GET_ALL_QUERY = "SELECT * FROM employees";
+    private static final String GET_BY_ID_QUERY = "SELECT e.id AS employee_id, e.name AS employee_name, e.surname AS employee_surname," +
+            "                    e.phone_number AS employee_phone_number, e.position AS employee_position," +
+            "                    m.id AS monthly_payment_id, m.amount AS monthly_payment_amount, m.payment_date AS monthly_payment_date," +
+            "                    b.id AS bonus_payment_id, b.amount AS bonus_payment_amount, b.description AS bonus_payment_description," +
+            "                    c.id AS contract_id, c.start_date AS contract_start_date, c.end_date AS contract_end_date, " +
+            "                    c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active " +
+            "                    FROM employees e " +
+            "                    LEFT JOIN monthly_payments m ON e.id = m.employees_id " +
+            "                    LEFT JOIN bonus_payments b ON m.id = b.monthly_payments_id " +
+            "                    LEFT JOIN contracts c ON e.id = c.employees_id WHERE e.id = ?";
+
+    private static final String GET_ALL_BY_WORKSHOP_QUERY = "SELECT e.id AS employee_id, e.name AS employee_name, e.surname AS employee_surname," +
+            "                    e.phone_number AS employee_phone_number, e.position AS employee_position," +
+            "                    m.id AS monthly_payment_id, m.amount AS monthly_payment_amount, m.payment_date AS monthly_payment_date," +
+            "                    b.id AS bonus_payment_id, b.amount AS bonus_payment_amount, b.description AS bonus_payment_description," +
+            "                    c.id AS contract_id, c.start_date AS contract_start_date, c.end_date AS contract_end_date, " +
+            "                    c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active " +
+            "                    FROM employees e " +
+            "                    LEFT JOIN monthly_payments m ON e.id = m.employees_id " +
+            "                    LEFT JOIN bonus_payments b ON m.id = b.monthly_payments_id " +
+            "                    LEFT JOIN contracts c ON e.id = c.employees_id WHERE e.workshops_id = ?";
     private static final String UPDATE_QUERY = "UPDATE employees SET workshop_id = ?, name = ?, surname = ?, phone_number = ?, position = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM employees WHERE id = ?";
+
+    public List<Employee> mapRow(ResultSet resultSet, List<Employee> employees) throws SQLException {
+
+
+        if (employees == null) {
+
+            employees = new ArrayList<>();
+        }
+
+
+        Long employeeId = resultSet.getLong("employee_id");
+
+        if (employeeId != 0) {
+            Employee employee = findById(employeeId, employees);
+
+            // Mapowanie danych pracownika
+            employee.setId(employeeId);
+            employee.setName(resultSet.getString("employee_name"));
+            employee.setSurname(resultSet.getString("employee_surname"));
+            employee.setPhoneNumber(resultSet.getString("employee_phone_number"));
+            employee.setPosition(resultSet.getString("employee_position"));
+
+            List<MonthlyPayment> monthlyPayments = MonthlyPaymentDAO.mapMonthlyPayments(resultSet, employee.getMonthlyPayments());
+            employee.setMonthlyPayments(monthlyPayments);
+
+            List<Contract> contracts = ContractDAO.mapRow(resultSet, employee.getContracts());
+            employee.setContracts(contracts);
+
+            employees.add(employee);
+
+        }
+
+        return employees;
+    }
+
+    private Employee findById(Long id, List<Employee> employees) {
+        return employees.stream()
+                .filter(employee -> employee.getId().equals(id))
+                .findFirst()
+                .orElseGet(() -> {
+                    Employee newEmployee = new Employee();
+                    newEmployee.setId(id);
+                    employees.add(newEmployee);
+                    return newEmployee;
+                });
+    }
+
 
     @Override
     public void create(Employee employee, Long workshopId) {
@@ -55,43 +125,23 @@ public class EmployeeDAO implements IEmployeeDAO {
     @Override
     public Employee getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        Employee employee = null;
+        List<Employee> employees = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY)) {
             preparedStatement.setLong(1, id);
 
             ResultSet result = preparedStatement.executeQuery();
-
-            if (result.next()) {
-                employee = mapEmployee(result);
-            }
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-
-        return employee;
-    }
-
-    @Override
-    public List<Employee> getAll() {
-        List<Employee> employees = new ArrayList<>();
-        Connection connection = CONNECTION_POOL.getConnection();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY)) {
-            ResultSet result = preparedStatement.executeQuery();
-
             while (result.next()) {
-                Employee employee = mapEmployee(result);
-                employees.add(employee);
+                employees = mapRow(result, employees);
             }
+
+
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
 
-        return employees;
+        return employees.get(0);
     }
 
     @Override
@@ -132,15 +182,5 @@ public class EmployeeDAO implements IEmployeeDAO {
         } finally {
             CONNECTION_POOL.releaseConnection(connection);
         }
-    }
-
-    private Employee mapEmployee(ResultSet resultSet) throws SQLException {
-        Employee employee = new Employee();
-        employee.setId(resultSet.getLong("id"));
-        employee.setName(resultSet.getString("name"));
-        employee.setSurname(resultSet.getString("surname"));
-        employee.setPhoneNumber(resultSet.getString("phone_number"));
-        employee.setPosition(resultSet.getString("position"));
-        return employee;
     }
 }

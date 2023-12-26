@@ -5,6 +5,7 @@ import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.domain.order.ServiceOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Employee extends Person {
@@ -13,6 +14,12 @@ public class Employee extends Person {
     private List<ServiceOrder> serviceOrders;
     private List<MonthlyPayment> monthlyPayments;
     private List<Contract> contracts;
+
+    public Employee() {
+        this.serviceOrders = new ArrayList<>();
+        this.monthlyPayments = new ArrayList<>();
+        this.contracts = new ArrayList<>();
+    }
 
     public String getPosition() {
         return position;
