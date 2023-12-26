@@ -1,9 +1,9 @@
 package com.solvd.laba.persistence.account.impl;
 
-import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.account.IAccountDAO;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.account.IAccountDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.solvd.laba.persistence.account.impl.RoleDAO.mapRoles;
+
 public class AccountDAO implements IAccountDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
@@ -28,6 +30,25 @@ public class AccountDAO implements IAccountDAO {
     private static final String DELETE_ROLE_FROM_ACCOUNT_QUERY = "DELETE FROM roles_has_accounts WHERE accounts_id = ? AND roles_id = ?";
     private static final String DELETE_ACCOUNT_QUERY = "DELETE FROM accounts WHERE id = ?";
     private static final String UPDATE_ACCOUNT_QUERY = "UPDATE accounts SET login = ?, password = ? WHERE id = ?";
+
+    private static final String GET_ACCOUNT_BY_EMPLOYEE_QUERY =
+            "SELECT a.id AS account_id, a.login as account_login, a.password as account_password, r.id AS role_id, r.name AS role_name " +
+                    "FROM accounts a " +
+                    "JOIN employees e ON a.id = e.accounts_id " +
+                    "LEFT JOIN roles_has_accounts ra ON a.id = ra.accounts_id " +
+                    "LEFT JOIN roles r ON ra.roles_id = r.id " +
+                    "WHERE e.id = ?";
+
+    public static Account mapAccount(ResultSet resultSet) throws SQLException {
+        Account account = new Account();
+        account.setId(resultSet.getLong("account_id"));
+        account.setLogin(resultSet.getString("account_login"));
+        account.setPassword(resultSet.getString("account_password"));
+
+        account.setRoles(RoleDAO.mapRoles(resultSet, account.getRoles()));
+
+        return account;
+    }
 
     @Override
     public void create(Account account) {
@@ -200,5 +221,29 @@ public class AccountDAO implements IAccountDAO {
 
         return roles;
     }
+
+    @Override
+    public Account getAccountByEmployee(Long employeeId) {
+        Account account = null;
+        Connection connection = CONNECTION_POOL.getConnection();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ACCOUNT_BY_EMPLOYEE_QUERY)) {
+            preparedStatement.setLong(1, employeeId);
+
+            ResultSet result = preparedStatement.executeQuery();
+
+            if (result.next()) {
+                account = mapAccount(result);
+                account.setRoles(mapRoles(result, account.getRoles()));
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        } finally {
+            CONNECTION_POOL.releaseConnection(connection);
+        }
+
+        return account;
+    }
+
 
 }

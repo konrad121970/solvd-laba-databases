@@ -22,4 +22,5 @@ public interface IAccountDAO extends CommonDAO<Account> {
 
     Set<Role> getRolesByAccount(Account account);
 
+    Account getAccountByEmployee(Long employeeId);
 }

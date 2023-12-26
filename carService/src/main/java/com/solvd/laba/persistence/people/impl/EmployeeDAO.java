@@ -4,6 +4,7 @@ import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.account.impl.AccountDAO;
 import com.solvd.laba.persistence.contract.impl.ContractDAO;
 import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
@@ -27,11 +28,17 @@ public class EmployeeDAO implements IEmployeeDAO {
             "                    m.id AS monthly_payment_id, m.amount AS monthly_payment_amount, m.payment_date AS monthly_payment_date," +
             "                    b.id AS bonus_payment_id, b.amount AS bonus_payment_amount, b.description AS bonus_payment_description," +
             "                    c.id AS contract_id, c.start_date AS contract_start_date, c.end_date AS contract_end_date, " +
-            "                    c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active " +
+            "                    c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active, " +
+            "                    a.id AS account_id, a.login as account_login, a.password as account_password, r.id AS role_id, r.name AS role_name " +
             "                    FROM employees e " +
             "                    LEFT JOIN monthly_payments m ON e.id = m.employees_id " +
             "                    LEFT JOIN bonus_payments b ON m.id = b.monthly_payments_id " +
-            "                    LEFT JOIN contracts c ON e.id = c.employees_id WHERE e.id = ?";
+            "                    LEFT JOIN contracts c ON e.id = c.employees_id" +
+            "                    LEFT JOIN accounts a ON e.id = a.employees_id " +
+            "                    LEFT JOIN roles_has_accounts ra ON a.id = ra.accounts_id " +
+            "                    LEFT JOIN roles r ON ra.roles_id = r.id " +
+            "                    WHERE e.id = ?";
+
 
     private static final String GET_ALL_BY_WORKSHOP_QUERY = "SELECT e.id AS employee_id, e.name AS employee_name, e.surname AS employee_surname," +
             "                    e.phone_number AS employee_phone_number, e.position AS employee_position," +
@@ -50,7 +57,6 @@ public class EmployeeDAO implements IEmployeeDAO {
 
 
         if (employees == null) {
-
             employees = new ArrayList<>();
         }
 
@@ -60,7 +66,6 @@ public class EmployeeDAO implements IEmployeeDAO {
         if (employeeId != 0) {
             Employee employee = findById(employeeId, employees);
 
-            // Mapowanie danych pracownika
             employee.setId(employeeId);
             employee.setName(resultSet.getString("employee_name"));
             employee.setSurname(resultSet.getString("employee_surname"));
@@ -72,6 +77,8 @@ public class EmployeeDAO implements IEmployeeDAO {
 
             List<Contract> contracts = ContractDAO.mapRow(resultSet, employee.getContracts());
             employee.setContracts(contracts);
+
+            employee.setAccount(AccountDAO.mapAccount(resultSet));
 
             employees.add(employee);
 
@@ -143,6 +150,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 
         return employees.get(0);
     }
+
 
     @Override
     public void update(Employee employee) {

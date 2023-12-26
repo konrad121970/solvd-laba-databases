@@ -1,9 +1,9 @@
 package com.solvd.laba.persistence.account.impl;
 
-import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.account.IRoleDAO;
 import com.solvd.laba.domain.account.Account;
 import com.solvd.laba.domain.account.Role;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.account.IRoleDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RoleDAO implements IRoleDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -26,6 +28,24 @@ public class RoleDAO implements IRoleDAO {
     private static final String GET_ACCOUNTS_BY_ROLE_QUERY = "SELECT a.* FROM accounts a " +
             "JOIN roles_has_accounts ra ON a.id = ra.accounts_id " +
             "WHERE ra.roles_id = ?";
+
+    public static Set<Role> mapRoles(ResultSet resultSet, Set<Role> roles) throws SQLException {
+
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+
+        Long id = resultSet.getLong("role_id");
+
+        if (id != 0) {
+            Role role = new Role();
+            role.setId(id);
+            role.setName(resultSet.getString("role_name"));
+            roles.add(role);
+        }
+
+        return roles;
+    }
 
     @Override
     public void create(Role role) {
@@ -43,6 +63,7 @@ public class RoleDAO implements IRoleDAO {
         }
     }
 
+    // TODO: getByid
     @Override
     public Role getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
@@ -53,9 +74,7 @@ public class RoleDAO implements IRoleDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-                role = new Role();
-                role.setId(result.getLong("id"));
-                role.setName(result.getString("name"));
+                /*mapRoles(result, )*/
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -131,11 +150,7 @@ public class RoleDAO implements IRoleDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             while (result.next()) {
-                Account account = new Account();
-                account.setId(result.getLong("id"));
-                account.setLogin(result.getString("login"));
-                account.setPassword(result.getString("password"));
-                accounts.add(account);
+                accounts.add(AccountDAO.mapAccount(result));
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -145,4 +160,5 @@ public class RoleDAO implements IRoleDAO {
 
         return accounts;
     }
+
 }

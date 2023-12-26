@@ -24,7 +24,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public void createAccount(Account account) { // (Account account, Long employeeId)
+    public void createAccount(Account account) {
         accountDAO.create(account);
         LOGGER.info("Account created: {}", account);
     }
