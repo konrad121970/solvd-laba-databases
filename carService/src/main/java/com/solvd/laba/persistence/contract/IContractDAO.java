@@ -6,7 +6,9 @@ import com.solvd.laba.persistence.CommonDAO;
 import java.util.List;
 
 public interface IContractDAO extends CommonDAO<Contract> {
-    void create(Contract contract);
+
+
+    void create(Contract contract, Long employeeId);
 
     List<Contract> getAll();
 

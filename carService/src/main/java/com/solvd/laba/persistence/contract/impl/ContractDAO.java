@@ -17,14 +17,14 @@ import java.util.List;
 public class ContractDAO implements IContractDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
-    private static final String CREATE_QUERY = "INSERT INTO contracts (start_date, end_date, type, salary, active) VALUES (?, ?, ?, ?, ?)";
+    private static final String CREATE_QUERY = "INSERT INTO contracts (start_date, end_date, type, salary, active, employees_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM contracts WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM contracts";
     private static final String UPDATE_QUERY = "UPDATE contracts SET start_date = ?, end_date = ?, type = ?, salary = ?, active = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM contracts WHERE id = ?";
 
     public static List<Contract> mapRow(ResultSet resultSet, List<Contract> contracts) throws SQLException {
-        Long id = resultSet.getLong("contracts_id");
+        Long id = resultSet.getLong("contract_id");
 
         if (contracts == null) {
             contracts = new ArrayList<>();
@@ -32,15 +32,15 @@ public class ContractDAO implements IContractDAO {
 
         if (id != 0) {
             Contract contract = findById(id, contracts);
-            contract.setStartDate(resultSet.getDate("start_date"));
-            contract.setEndDate(resultSet.getDate("end_date"));
-            contract.setType(resultSet.getString("type"));
-            contract.setSalary(resultSet.getDouble("salary"));
-            contract.setActive(resultSet.getBoolean("active"));
+            contract.setStartDate(resultSet.getDate("contract_start_date"));
+            contract.setEndDate(resultSet.getDate("contract_end_date"));
+            contract.setType(resultSet.getString("contract_type"));
+            contract.setSalary(resultSet.getDouble("contract_salary"));
+            contract.setActive(resultSet.getBoolean("contract_active"));
         }
         return contracts;
     }
-    
+
     private static Contract findById(Long id, List<Contract> contracts) {
         return contracts.stream()
                 .filter(contract -> contract.getId().equals(id))
@@ -54,7 +54,7 @@ public class ContractDAO implements IContractDAO {
     }
 
     @Override
-    public void create(Contract contract) {
+    public void create(Contract contract, Long employeeId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY)) {
             preparedStatement.setDate(1, contract.getStartDate());
@@ -62,6 +62,7 @@ public class ContractDAO implements IContractDAO {
             preparedStatement.setString(3, contract.getType());
             preparedStatement.setDouble(4, contract.getSalary());
             preparedStatement.setBoolean(5, contract.isActive());
+            preparedStatement.setLong(6, employeeId);
 
             preparedStatement.executeUpdate();
 

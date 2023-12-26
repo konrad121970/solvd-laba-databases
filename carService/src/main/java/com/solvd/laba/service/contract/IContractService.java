@@ -5,7 +5,7 @@ import com.solvd.laba.domain.contract.Contract;
 import java.util.List;
 
 public interface IContractService {
-    void createContract(Contract contract);
+    void createContract(Contract contract, Long employeeId);
 
     Contract getContractById(Long id);
 

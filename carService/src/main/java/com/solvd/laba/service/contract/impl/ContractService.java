@@ -16,8 +16,8 @@ public class ContractService implements IContractService {
     }
 
     @Override
-    public void createContract(Contract contract) {
-        contractDAO.create(contract);
+    public void createContract(Contract contract, Long employeeId) {
+        contractDAO.create(contract, employeeId);
     }
 
     @Override
