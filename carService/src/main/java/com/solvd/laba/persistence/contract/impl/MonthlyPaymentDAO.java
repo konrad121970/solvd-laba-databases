@@ -18,35 +18,40 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO monthly_payments (amount, payment_date, employees_id) VALUES (?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount, mp.payment_date, bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description as bonus_payment_description" +
+    private static final String GET_BY_ID_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as monthly_payment_date, bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description as bonus_payment_description" +
             "FROM monthly_payments mp " +
             "LEFT JOIN bonus_payments bp ON mp.id = bp.monthly_payments_id " +
             "WHERE mp.id = ?";
-    private static final String GET_ALL_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount, mp.payment_date, " +
+    private static final String GET_ALL_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as monthly_payment_date, " +
             "bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description AS bonus_payment_description " +
             "FROM monthly_payments mp " +
             "LEFT JOIN bonus_payments bp ON mp.id = bp.monthly_payments_id";
 
-    /*    private static final String GET_BONUS_PAYMENTS_BY_MONTHLY_PAYMENT_ID_QUERY = "SELECT * FROM bonus_payments WHERE monthly_payments_id = ?";*/
+
     private static final String UPDATE_QUERY = "UPDATE monthly_payments SET amount = ?, payment_date = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM monthly_payments WHERE id = ?";
-    private final BonusPaymentDAO bonusPaymentDAO = new BonusPaymentDAO();
 
-    private static List<MonthlyPayment> mapMonthlyPayments(ResultSet resultSet, List<MonthlyPayment> monthlyPayments) throws SQLException {
-        while (resultSet.next()) {
-            Long id = resultSet.getLong("monthly_payment_id");
+    public static List<MonthlyPayment> mapMonthlyPayments(ResultSet resultSet, List<MonthlyPayment> monthlyPayments) throws SQLException {
 
+        if (monthlyPayments == null) {
+            monthlyPayments = new ArrayList<>();
+        }
+
+        Long id = resultSet.getLong("monthly_payment_id");
+
+        if (id != 0) {
             MonthlyPayment monthlyPayment = findById(id, monthlyPayments);
-            monthlyPayment.setAmount(resultSet.getDouble("amount"));
-            monthlyPayment.setPaymentDate(resultSet.getDate("payment_date"));
+            monthlyPayment.setAmount(resultSet.getDouble("monthly_payment_amount"));
+            monthlyPayment.setPaymentDate(resultSet.getDate("monthly_payment_date"));
 
             List<BonusPayment> bonusPayments = BonusPaymentDAO.mapRow(resultSet, monthlyPayment.getBonusPaymentList());
             monthlyPayment.setBonusPaymentList(bonusPayments);
         }
+
         return monthlyPayments;
     }
 
-    private static MonthlyPayment findById(Long id, List<MonthlyPayment> monthlyPayments) {
+    public static MonthlyPayment findById(Long id, List<MonthlyPayment> monthlyPayments) {
         return monthlyPayments.stream()
                 .filter(monthlyPayment -> monthlyPayment.getId().equals(id))
                 .findFirst()
@@ -67,7 +72,9 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
             preparedStatement.setLong(1, employeeId);
             ResultSet result = preparedStatement.executeQuery();
 
-            mapMonthlyPayments(result, monthlyPayments);
+            while (result.next()) {
+                mapMonthlyPayments(result, monthlyPayments);
+            }
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
