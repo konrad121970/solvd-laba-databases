@@ -1,10 +1,12 @@
 package com.solvd.laba;
 
+import com.solvd.laba.domain.order.ServiceOrder;
+import com.solvd.laba.domain.order.Vehicle;
 import com.solvd.laba.domain.people.Employee;
-import com.solvd.laba.service.contract.IContractService;
-import com.solvd.laba.service.contract.IMonthlyPaymentsService;
-import com.solvd.laba.service.contract.impl.ContractService;
-import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
+import com.solvd.laba.service.order.IServiceOrderService;
+import com.solvd.laba.service.order.IVehicleService;
+import com.solvd.laba.service.order.impl.ServiceOrderService;
+import com.solvd.laba.service.order.impl.VehicleService;
 import com.solvd.laba.service.people.IEmployeeService;
 import com.solvd.laba.service.people.impl.EmployeeService;
 import org.apache.logging.log4j.LogManager;
@@ -18,27 +20,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        IMonthlyPaymentsService monthlyPaymentService = new MonthlyPaymentService();
-        IContractService contractService = new ContractService();
         IEmployeeService employeeService = new EmployeeService();
-
-/*
-        MonthlyPayment monthlyPayment1 = new MonthlyPayment();
-        monthlyPayment1.setAmount(1000.0);
-        monthlyPayment1.setPaymentDate(new Date(2023 - 1900, 0, 9));
-        monthlyPaymentService.createMonthlyPayment(monthlyPayment1, 1L);
-
-        BonusPayment bonusPayment2 = new BonusPayment();
-        bonusPayment2.setAmount(200.0);
-        bonusPayment2.setDescription("Bonus payment for good performance");
-        monthlyPaymentService.addBonusPaymentToMonthlyPayment(monthlyPayment1, bonusPayment2);*/
+        IServiceOrderService serviceOrderService = new ServiceOrderService();
+        IVehicleService vehicleService = new VehicleService();
 
 
         Employee employee = employeeService.getEmployeeById(1L);
 
+        ServiceOrder serviceOrder = serviceOrderService.getServiceOrderById(1L);
 
+        Vehicle vehicle = vehicleService.getVehicleById(1L);
 
-
+        System.out.println("lol");
 
 /*        Long employeeId = 1L;
         System.out.println("Monthly Payments with Bonuses for Employee ID " + employeeId + ":");
