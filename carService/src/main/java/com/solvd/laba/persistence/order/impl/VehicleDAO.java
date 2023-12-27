@@ -1,9 +1,9 @@
 package com.solvd.laba.persistence.order.impl;
 
-import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.order.IVehicleDAO;
 import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.order.Vehicle;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.order.IVehicleDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,11 +19,53 @@ public class VehicleDAO implements IVehicleDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO vehicles (vin, make, model, license_plate) VALUES (?, ?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM vehicles WHERE id = ?";
+    private static final String GET_BY_ID_QUERY =
+            "SELECT " +
+                    "   v.id AS vehicle_id, v.vin AS vehicle_vin, v.make AS vehicle_make, v.model AS vehicle_model, v.license_plate AS vehicle_license_plate, " +
+                    "   so.id AS service_order_id, so.description AS service_order_description, so.completed AS service_order_completed, so.date as service_order_date " +
+                    "FROM vehicles v " +
+                    "LEFT JOIN service_orders so ON v.id = so.vehicles_id " +
+                    "WHERE v.id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM vehicles";
     private static final String GET_SERVICE_ORDERS_BY_VEHICLE_QUERY = "SELECT so.* FROM service_orders so JOIN vehicles v ON so.vehicle_id = v.id WHERE v.id = ?";
     private static final String DELETE_VEHICLE_QUERY = "DELETE FROM vehicles WHERE id = ?";
     private static final String UPDATE_VEHICLE_QUERY = "UPDATE vehicles SET vin = ?, make = ?, model = ?, license_plate = ? WHERE id = ?";
+
+    public static List<Vehicle> mapRow(ResultSet resultSet, List<Vehicle> vehicles) throws SQLException {
+        List<ServiceOrder> serviceOrders = new ArrayList<>();
+        if (vehicles == null) {
+            vehicles = new ArrayList<>();
+        }
+
+        Long id = resultSet.getLong("vehicle_id");
+
+        if (id != 0) {
+            Vehicle vehicle = findById(id, vehicles);
+            vehicle.setVin(resultSet.getString("vehicle_vin"));
+            vehicle.setMake(resultSet.getString("vehicle_make"));
+            vehicle.setModel(resultSet.getString("vehicle_model"));
+            vehicle.setLicensePlate(resultSet.getString("vehicle_license_plate"));
+
+            serviceOrders = ServiceOrderDAO.mapRow(resultSet, serviceOrders);
+            vehicle.setServiceOrders(serviceOrders);
+
+            vehicles.add(vehicle);
+        }
+
+        return vehicles;
+    }
+
+    private static Vehicle findById(Long id, List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .filter(vehicle -> vehicle.getId().equals(id))
+                .findFirst()
+                .orElseGet(() -> {
+                    Vehicle newVehicle = new Vehicle();
+                    newVehicle.setId(id);
+                    vehicles.add(newVehicle);
+                    return newVehicle;
+                });
+    }
 
     @Override
     public void create(Vehicle vehicle) {
@@ -48,7 +90,7 @@ public class VehicleDAO implements IVehicleDAO {
     @Override
     public Vehicle getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        Vehicle vehicle = null;
+        List<Vehicle> vehicles = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY)) {
 
             preparedStatement.setLong(1, id);
@@ -56,13 +98,9 @@ public class VehicleDAO implements IVehicleDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-                vehicle = new Vehicle();
-                vehicle.setId(result.getLong("id"));
-                vehicle.setVin(result.getString("vin"));
-                vehicle.setMake(result.getString("make"));
-                vehicle.setModel(result.getString("model"));
-                vehicle.setLicensePlate(result.getString("license_plate"));
-                vehicle.setServiceOrders(getServiceOrdersByVehicle(vehicle.getId()));
+
+                mapRow(result, vehicles);
+
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -70,7 +108,7 @@ public class VehicleDAO implements IVehicleDAO {
             CONNECTION_POOL.releaseConnection(connection);
         }
 
-        return vehicle;
+        return vehicles.get(0);
     }
 
     @Override
