@@ -4,7 +4,7 @@ create database if not exists solvd_database;
 
 use solvd_database;
 
-create table if not exists adresses
+create table if not exists addresses
   (
      id              SERIAL,-- BIGINT UNSIGNED NOT NULL AUTOINCREMENT UNIQUE
      city            varchar(45) not null,
@@ -17,12 +17,12 @@ create table if not exists adresses
 create table if not exists workshops
   (
      id          SERIAL,
-     adresses_id bigint unsigned not null,
+     addresses_id bigint unsigned not null,
      name        varchar(45) not null,
      nip         varchar(45) not null,
      primary key (id),
-     constraint fk_workshops_adresses foreign key (adresses_id) references
-     adresses (id) on delete cascade on update no action
+     constraint fk_workshops_addresses foreign key (addresses_id) references
+     addresses (id) on delete cascade on update no action
   );
 
 create table if not exists stocks
