@@ -54,7 +54,7 @@ public class EmployeeDAO implements IEmployeeDAO {
     private static final String UPDATE_QUERY = "UPDATE employees SET workshop_id = ?, name = ?, surname = ?, phone_number = ?, position = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM employees WHERE id = ?";
 
-    public List<Employee> mapRow(ResultSet resultSet, List<Employee> employees) throws SQLException {
+    public static List<Employee> mapRow(ResultSet resultSet, List<Employee> employees) throws SQLException {
 
 
         if (employees == null) {
@@ -88,7 +88,7 @@ public class EmployeeDAO implements IEmployeeDAO {
         return employees;
     }
 
-    private Employee findById(Long id, List<Employee> employees) {
+    private static Employee findById(Long id, List<Employee> employees) {
         return employees.stream()
                 .filter(employee -> employee.getId().equals(id))
                 .findFirst()
