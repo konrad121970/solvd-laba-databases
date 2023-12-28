@@ -5,13 +5,11 @@ import com.solvd.laba.persistence.workshop.IWorkshopDAO;
 import com.solvd.laba.persistence.workshop.impl.WorkshopDAO;
 import com.solvd.laba.service.workshop.IWorkshopService;
 
-import java.util.List;
-
-public class WorkshopServiceImpl implements IWorkshopService {
+public class WorkshopService implements IWorkshopService {
 
     private final IWorkshopDAO workshopDAO;
 
-    public WorkshopServiceImpl() {
+    public WorkshopService() {
         this.workshopDAO = new WorkshopDAO();
     }
 
@@ -25,8 +23,5 @@ public class WorkshopServiceImpl implements IWorkshopService {
         return workshopDAO.getById(id);
     }
 
-    @Override
-    public List<Workshop> getAllWorkshops() {
-        return workshopDAO.getAll();
-    }
+
 }
