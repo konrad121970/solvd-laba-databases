@@ -1,8 +1,9 @@
 package com.solvd.laba.persistence.stock.impl;
 
-import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.stock.IProductDAO;
 import com.solvd.laba.domain.stock.Product;
+import com.solvd.laba.persistence.ConnectionPool;
+import com.solvd.laba.persistence.order.impl.InvoiceDAO;
+import com.solvd.laba.persistence.stock.IProductDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,10 +19,72 @@ public class ProductDAO implements IProductDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO products (product_number, name, price) VALUES (?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM products WHERE id = ?";
-    private static final String GET_ALL_QUERY = "SELECT * FROM products";
+    private static final String GET_BY_ID_QUERY = "SELECT p.id AS product_id, p.product_number, p.name as product_name, p.price as product_price," +
+            "s.name as stock_name, i.id as invoice_id, i.date_time as invoice_date_time, i.total_price as invoice_total_price, s.id as stock_id, s.name as stock_name " +
+            "FROM products p " +
+            "LEFT JOIN stocks_has_products shp ON p.id = shp.products_id " +
+            "LEFT JOIN stocks s ON shp.stocks_id = s.id " +
+            "LEFT JOIN invoices_has_products ihp ON p.id = ihp.products_id " +
+            "LEFT JOIN invoices i ON ihp.invoices_id = i.id " +
+            "WHERE p.id = ?";
+    private static final String GET_ALL_QUERY = "SELECT p.id AS product_id, p.product_number, p.name, p.price " +
+            "FROM products p " +
+            "LEFT JOIN stocks_has_products shp ON p.id = shp.products_id " +
+            "LEFT JOIN stocks s ON shp.stocks_id = s.id " +
+            "LEFT JOIN invoices_has_products ihp ON p.id = ihp.products_id " +
+            "LEFT JOIN invoices i ON ihp.invoices_id = i.id";
+
     private static final String UPDATE_QUERY = "UPDATE products SET product_number = ?, name = ?, price = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM products WHERE id = ?";
+
+    public static List<Product> mapRow(ResultSet resultSet, List<Product> products) throws SQLException {
+        if (products == null) {
+            products = new ArrayList<>();
+        }
+
+        Long productId = resultSet.getLong("product_id");
+
+        if (productId != 0) {
+            Product product = findById(productId, products);
+
+            product.setId(productId);
+            product.setProductNumber(resultSet.getString("product_number"));
+            product.setName(resultSet.getString("product_name"));
+            product.setPrice(resultSet.getDouble("product_price"));
+
+            product.setInvoices(InvoiceDAO.mapInvoices(resultSet, product.getInvoices()));
+
+            try {
+                int stockIdColumnIndex = resultSet.findColumn("stock_id");
+                if (stockIdColumnIndex != 0) {
+                    Long stockId = resultSet.getLong("stock_id");
+                    if (stockId != 0) {
+                        product.setStocks(StockDAO.mapStock(resultSet, product.getStocks()));
+                    }
+                }
+            } catch (SQLException e) {
+                product.setStocks(null);
+            }
+
+
+            products.add(product);
+        }
+
+        return products;
+    }
+
+    private static Product findById(Long id, List<Product> products) {
+        return products.stream()
+                .filter(product -> product.getId().equals(id))
+                .findFirst()
+                .orElseGet(() -> {
+                    Product newProduct = new Product();
+                    newProduct.setId(id);
+                    products.add(newProduct);
+                    return newProduct;
+                });
+    }
+
 
     @Override
     public void create(Product product) {
@@ -45,14 +108,15 @@ public class ProductDAO implements IProductDAO {
     @Override
     public Product getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        Product product = null;
+        List<Product> products = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY)) {
             preparedStatement.setLong(1, id);
 
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-                product = mapResultSetToProduct(result);
+                mapRow(result, products);
+
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -60,7 +124,7 @@ public class ProductDAO implements IProductDAO {
             CONNECTION_POOL.releaseConnection(connection);
         }
 
-        return product;
+        return products.get(0);
     }
 
     @Override
@@ -72,8 +136,7 @@ public class ProductDAO implements IProductDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             while (result.next()) {
-                Product product = mapResultSetToProduct(result);
-                products.add(product);
+                mapRow(result, products);
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -121,13 +184,4 @@ public class ProductDAO implements IProductDAO {
         }
     }
 
-    private Product mapResultSetToProduct(ResultSet result) throws SQLException {
-        Product product = new Product();
-        product.setId(result.getLong("id"));
-        product.setProductNumber(result.getString("product_number"));
-        product.setName(result.getString("name"));
-        product.setPrice(result.getDouble("price"));
-
-        return product;
-    }
 }
