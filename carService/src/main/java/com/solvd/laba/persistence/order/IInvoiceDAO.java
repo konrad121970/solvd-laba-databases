@@ -7,7 +7,8 @@ import com.solvd.laba.persistence.CommonDAO;
 import java.util.List;
 
 public interface IInvoiceDAO extends CommonDAO<Invoice> {
-    void create(Invoice invoice);
+
+    void create(Invoice invoice, Long serviceOrderId);
 
     List<Invoice> getAll();
 

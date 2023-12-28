@@ -39,7 +39,6 @@ public class EmployeeDAO implements IEmployeeDAO {
             "                    LEFT JOIN roles r ON ra.roles_id = r.id " +
             "                    WHERE e.id = ?";
 
-
     private static final String GET_ALL_BY_WORKSHOP_QUERY = "SELECT e.id AS employee_id, e.name AS employee_name, e.surname AS employee_surname," +
             "                    e.phone_number AS employee_phone_number, e.position AS employee_position," +
             "                    m.id AS monthly_payment_id, m.amount AS monthly_payment_amount, m.payment_date AS monthly_payment_date," +
