@@ -4,6 +4,7 @@ import com.solvd.laba.domain.order.Invoice;
 import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.persistence.ConnectionPool;
 import com.solvd.laba.persistence.order.IInvoiceDAO;
+import com.solvd.laba.persistence.stock.impl.ProductDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,9 +22,9 @@ public class InvoiceDAO implements IInvoiceDAO {
     private static final String CREATE_QUERY = "INSERT INTO invoices (date_time, total_price) VALUES (?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT i.id AS invoice_id, i.date_time AS invoice_date_time, i.total_price AS invoice_total_price," +
             "                           p.id AS product_id, p.product_number AS product_number, p.name AS product_name, p.price AS product_price" +
-            "                           FROM invoices " +
-            "                           LEFT JOIN invoices_has_products ihp ON i.id = ihp.invoices_id" +
-            "                           LEFT JOIN products p ON ihp.products_id = p.id" +
+            "                           FROM invoices i " +
+            "                           LEFT JOIN invoices_has_products ihp ON i.id = ihp.invoices_id " +
+            "                           LEFT JOIN products p ON ihp.products_id = p.id " +
             "                           WHERE i.id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM invoices";
     private static final String ADD_PRODUCT_TO_INVOICE_QUERY = "INSERT INTO invoices_has_products (invoices_id, products_id) VALUES (?, ?)";
@@ -32,7 +33,7 @@ public class InvoiceDAO implements IInvoiceDAO {
     private static final String DELETE_INVOICE_QUERY = "DELETE FROM invoices WHERE id = ?";
     private static final String UPDATE_INVOICE_QUERY = "UPDATE invoices SET date_time = ?, total_price = ? WHERE id = ?";
 
-    public List<Invoice> mapRow(ResultSet resultSet, List<Invoice> invoices) throws SQLException {
+    public static List<Invoice> mapRow(ResultSet resultSet, List<Invoice> invoices) throws SQLException {
         if (invoices == null) {
             invoices = new ArrayList<>();
         }
@@ -46,8 +47,7 @@ public class InvoiceDAO implements IInvoiceDAO {
             invoice.setDateTime(resultSet.getTimestamp("invoice_date_time"));
             invoice.setTotalPrice(resultSet.getDouble("invoice_total_price"));
 
-
-            //invoice.setProducts(getProductsByInvoice(invoice.getId()));
+            invoice.setProducts(ProductDAO.mapRow(resultSet, invoice.getProducts()));
 
             invoices.add(invoice);
         }
@@ -55,7 +55,7 @@ public class InvoiceDAO implements IInvoiceDAO {
         return invoices;
     }
 
-    private Invoice findById(Long id, List<Invoice> invoices) {
+    private static Invoice findById(Long id, List<Invoice> invoices) {
         return invoices.stream()
                 .filter(invoice -> invoice.getId().equals(id))
                 .findFirst()
@@ -67,6 +67,25 @@ public class InvoiceDAO implements IInvoiceDAO {
                 });
     }
 
+    public static List<Invoice> mapInvoices(ResultSet resultSet, List<Invoice> invoices) throws SQLException {
+        if (invoices == null) {
+            invoices = new ArrayList<>();
+        }
+
+        Long invoiceId = resultSet.getLong("invoice_id");
+
+        if (invoiceId != 0) {
+            Invoice invoice = findById(invoiceId, invoices);
+
+            invoice.setId(invoiceId);
+            invoice.setDateTime(resultSet.getTimestamp("invoice_date_time"));
+            invoice.setTotalPrice(resultSet.getDouble("invoice_total_price"));
+
+            invoices.add(invoice);
+        }
+
+        return invoices;
+    }
 
     @Override
     public void create(Invoice invoice, Long serviceOrderId) {
@@ -239,4 +258,5 @@ public class InvoiceDAO implements IInvoiceDAO {
 
         return products;
     }
+
 }

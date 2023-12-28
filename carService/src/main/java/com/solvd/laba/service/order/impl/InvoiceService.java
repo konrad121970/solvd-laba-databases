@@ -1,6 +1,7 @@
 package com.solvd.laba.service.order.impl;
 
 import com.solvd.laba.domain.order.Invoice;
+import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.persistence.order.IInvoiceDAO;
 import com.solvd.laba.persistence.order.impl.InvoiceDAO;
@@ -17,8 +18,8 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public void createInvoice(Invoice invoice) {
-        invoiceDAO.create(invoice);
+    public void createInvoice(Invoice invoice, ServiceOrder serviceOrder) {
+        invoiceDAO.create(invoice, serviceOrder.getId());
     }
 
     @Override

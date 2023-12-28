@@ -1,12 +1,14 @@
 package com.solvd.laba.service.order;
 
 import com.solvd.laba.domain.order.Invoice;
+import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.stock.Product;
 
 import java.util.List;
 
 public interface IInvoiceService {
-    void createInvoice(Invoice invoice);
+
+    void createInvoice(Invoice invoice, ServiceOrder serviceOrder);
 
     Invoice getInvoiceById(Long id);
 
