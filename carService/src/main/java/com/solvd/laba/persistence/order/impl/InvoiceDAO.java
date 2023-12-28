@@ -38,9 +38,14 @@ public class InvoiceDAO implements IInvoiceDAO {
             invoices = new ArrayList<>();
         }
 
-        Long invoiceId = resultSet.getLong("invoice_id");
+        Long invoiceId;
+        try {
+            invoiceId = resultSet.getLong("invoice_id");
+        } catch (SQLException e) {
+            invoiceId = null;
+        }
 
-        if (invoiceId != 0) {
+        if (invoiceId != null) {
             Invoice invoice = findById(invoiceId, invoices);
 
             invoice.setId(invoiceId);
@@ -86,6 +91,7 @@ public class InvoiceDAO implements IInvoiceDAO {
 
         return invoices;
     }
+
 
     @Override
     public void create(Invoice invoice, Long serviceOrderId) {

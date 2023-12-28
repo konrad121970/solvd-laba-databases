@@ -42,7 +42,13 @@ public class ProductDAO implements IProductDAO {
             products = new ArrayList<>();
         }
 
-        Long productId = resultSet.getLong("product_id");
+        Long productId;
+        try {
+            productId = resultSet.getLong("product_id");
+        } catch (Exception e) {
+            return null;
+        }
+
 
         if (productId != 0) {
             Product product = findById(productId, products);

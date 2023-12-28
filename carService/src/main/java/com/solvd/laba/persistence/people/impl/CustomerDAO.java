@@ -19,7 +19,7 @@ public class CustomerDAO extends PersonDAO<Customer> implements ICustomerDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO customers (name, surname, phone_number) VALUES (?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT c.id AS customer_id, c.name AS customer_name, c.surname AS customer_surname," +
+    private static final String GET_BY_ID_QUERY = "SELECT c.id AS customer_id, c.name AS customer_name, c.surname AS customer_surname, c.email as customer_email," +
             "                    c.phone_number AS customer_phone_number, so.id AS service_order_id, so.date AS service_order_date, so.description AS service_order_description, so.completed as service_order_completed  " +
             "                    FROM customers c " +
             "                    LEFT JOIN service_orders so ON c.id = so.customers_id " +
@@ -39,6 +39,7 @@ public class CustomerDAO extends PersonDAO<Customer> implements ICustomerDAO {
             Customer customer = findById(customerId, customers);
 
             customer.setId(customerId);
+            customer.setEmail(resultSet.getString("customer_email"));
             customer.setName(resultSet.getString("customer_name"));
             customer.setSurname(resultSet.getString("customer_surname"));
             customer.setPhoneNumber(resultSet.getString("customer_phone_number"));

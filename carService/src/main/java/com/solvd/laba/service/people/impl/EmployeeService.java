@@ -5,17 +5,25 @@ import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
 import com.solvd.laba.persistence.people.impl.EmployeeDAO;
 import com.solvd.laba.service.contract.IContractService;
+import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 import com.solvd.laba.service.contract.impl.ContractService;
+import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
+import com.solvd.laba.service.order.IServiceOrderService;
+import com.solvd.laba.service.order.impl.ServiceOrderService;
 import com.solvd.laba.service.people.IEmployeeService;
 
 public class EmployeeService implements IEmployeeService {
 
     private final IEmployeeDAO employeeDAO;
     private final IContractService contractService;
+    private final IMonthlyPaymentsService monthlyPaymentsService;
+    private final IServiceOrderService serviceOrderService;
 
     public EmployeeService() {
-        this.employeeDAO = new EmployeeDAO();
-        this.contractService = new ContractService();
+        employeeDAO = new EmployeeDAO();
+        contractService = new ContractService();
+        monthlyPaymentsService = new MonthlyPaymentService();
+        serviceOrderService = new ServiceOrderService();
     }
 
     @Override
@@ -25,6 +33,16 @@ public class EmployeeService implements IEmployeeService {
         if (!employee.getContracts().isEmpty()) {
             employee.getContracts().forEach(contract -> {
                 contractService.createContract(contract, employee.getId());
+            });
+        }
+        if (!employee.getMonthlyPayments().isEmpty()) {
+            employee.getMonthlyPayments().forEach(monthlyPayment -> {
+                monthlyPaymentsService.createMonthlyPayment(monthlyPayment, employee.getId());
+            });
+        }
+        if (!employee.getServiceOrders().isEmpty()) {
+            employee.getServiceOrders().forEach(serviceOrder -> {
+                serviceOrderService.createServiceOrder(serviceOrder);
             });
         }
     }

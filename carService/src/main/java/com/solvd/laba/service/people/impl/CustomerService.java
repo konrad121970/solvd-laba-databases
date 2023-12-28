@@ -1,8 +1,9 @@
-package com.solvd.laba.service.people;
+package com.solvd.laba.service.people.impl;
 
 import com.solvd.laba.domain.people.Customer;
 import com.solvd.laba.persistence.people.ICustomerDAO;
 import com.solvd.laba.persistence.people.impl.CustomerDAO;
+import com.solvd.laba.service.people.ICustomerService;
 
 public class CustomerService implements ICustomerService {
     private final ICustomerDAO customerDAO;

@@ -48,7 +48,15 @@ public class ServiceOrderDAO implements IServiceOrderDAO {
                 serviceOrder.setCompleted(resultSet.getBoolean("service_order_completed"));
                 serviceOrder.setDate(resultSet.getDate("service_order_date"));
 
-                // serviceOrders.add(serviceOrder);
+                List<Invoice> invoices = new ArrayList<>();
+                invoices = InvoiceDAO.mapRow(resultSet, invoices);
+
+                try {
+                    serviceOrder.setInvoice(invoices.get(0));
+                } catch (IndexOutOfBoundsException e) {
+                    serviceOrder.setInvoice(null);
+                }
+
 
             }
 
