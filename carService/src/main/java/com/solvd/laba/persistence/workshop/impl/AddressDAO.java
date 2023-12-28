@@ -1,8 +1,8 @@
 package com.solvd.laba.persistence.workshop.impl;
 
+import com.solvd.laba.domain.workshop.Address;
 import com.solvd.laba.persistence.ConnectionPool;
 import com.solvd.laba.persistence.workshop.IAddressDAO;
-import com.solvd.laba.domain.workshop.Address;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +26,16 @@ public class AddressDAO implements IAddressDAO {
 
     private static final String DELETE_QUERY =
             "DELETE FROM adresses WHERE id = ?";
+
+    static Address mapAddress(ResultSet result) throws SQLException {
+        Address address = new Address();
+        address.setId(result.getLong("address_id"));
+        address.setStreet(result.getString("address_street"));
+        address.setCity(result.getString("address_city"));
+        address.setPostalCode(result.getString("address_postal_code"));
+
+        return address;
+    }
 
     @Override
     public void create(Address address) {
@@ -59,12 +69,7 @@ public class AddressDAO implements IAddressDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-                address = new Address();
-                address.setId(result.getLong("id"));
-                address.setCity(result.getString("city"));
-                address.setStreet(result.getString("street"));
-                address.setBuildingNumber(result.getString("building_number"));
-                address.setPostalCode(result.getString("postal_code"));
+                address = mapAddress(result);
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());

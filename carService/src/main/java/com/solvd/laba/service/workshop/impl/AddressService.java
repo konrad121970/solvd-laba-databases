@@ -7,11 +7,11 @@ import com.solvd.laba.service.workshop.IAddressService;
 
 import java.util.List;
 
-public class AddressServiceImpl implements IAddressService {
+public class AddressService implements IAddressService {
 
     private final IAddressDAO addressDAO;
 
-    public AddressServiceImpl() {
+    public AddressService() {
         this.addressDAO = new AddressDAO();
     }
 
