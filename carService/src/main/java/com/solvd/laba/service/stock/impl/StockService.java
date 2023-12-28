@@ -1,6 +1,5 @@
 package com.solvd.laba.service.stock.impl;
 
-import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.domain.stock.Stock;
 import com.solvd.laba.persistence.stock.IStockDAO;
 import com.solvd.laba.persistence.stock.impl.StockDAO;
@@ -39,11 +38,6 @@ public class StockService implements IStockService {
     @Override
     public void deleteStock(Long id) {
         stockDAO.delete(id);
-    }
-
-    @Override
-    public List<Product> getProductsByStockId(Long stockId) {
-        return stockDAO.getProductsByStockId(stockId);
     }
 
     @Override

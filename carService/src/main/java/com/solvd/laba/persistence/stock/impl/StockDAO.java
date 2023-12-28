@@ -1,6 +1,5 @@
 package com.solvd.laba.persistence.stock.impl;
 
-import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.domain.stock.Stock;
 import com.solvd.laba.persistence.ConnectionPool;
 import com.solvd.laba.persistence.stock.IStockDAO;
@@ -19,14 +18,69 @@ public class StockDAO implements IStockDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO stocks (name) VALUES (?)";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM stocks WHERE id = ?";
+    private static final String GET_BY_ID_QUERY = "SELECT s.id AS stock_id, s.name AS stock_name, " +
+            "p.id AS product_id, p.product_number AS product_number, p.name AS product_name, p.price AS product_price " +
+            "FROM stocks s " +
+            "LEFT JOIN stocks_products sp ON s.id = sp.stock_id " +
+            "LEFT JOIN products p ON sp.product_id = p.id " +
+            "WHERE s.id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM stocks";
     private static final String UPDATE_QUERY = "UPDATE stocks SET name = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM stocks WHERE id = ?";
-    private static final String GET_PRODUCTS_BY_STOCK_ID_QUERY =
-            "SELECT p.* FROM products p JOIN stocks_products sp ON p.id = sp.product_id WHERE sp.stock_id = ?";
     private static final String ADD_PRODUCT_TO_STOCK_QUERY = "INSERT INTO stocks_products (stock_id, product_id) VALUES (?, ?)";
     private static final String REMOVE_PRODUCT_FROM_STOCK_QUERY = "DELETE FROM stocks_products WHERE stock_id = ? AND product_id = ?";
+
+    public static List<Stock> mapRow(ResultSet resultSet, List<Stock> stocks) throws SQLException {
+        if (stocks == null) {
+            stocks = new ArrayList<>();
+        }
+
+        Long stockId = resultSet.getLong("stock_id");
+
+        if (stockId != 0) {
+            Stock stock = findById(stockId, stocks);
+
+            stock.setId(stockId);
+            stock.setName(resultSet.getString("stock_name"));
+
+            stock.setProductList(ProductDAO.mapRow(resultSet, stock.getProductList()));
+
+            stocks.add(stock);
+        }
+
+        return stocks;
+    }
+
+    private static Stock findById(Long id, List<Stock> stocks) {
+        return stocks.stream()
+                .filter(stock -> stock.getId().equals(id))
+                .findFirst()
+                .orElseGet(() -> {
+                    Stock newStock = new Stock();
+                    newStock.setId(id);
+                    stocks.add(newStock);
+                    return newStock;
+                });
+    }
+
+    public static List<Stock> mapStock(ResultSet resultSet, List<Stock> stocks) throws SQLException {
+        if (stocks == null) {
+            stocks = new ArrayList<>();
+        }
+
+        Long stockId = resultSet.getLong("stock_id");
+
+        if (stockId != 0) {
+            Stock stock = findById(stockId, stocks);
+
+            stock.setId(stockId);
+            stock.setName(resultSet.getString("stock_name"));
+
+            stocks.add(stock);
+        }
+
+        return stocks;
+    }
 
     @Override
     public void create(Stock stock) {
@@ -48,14 +102,14 @@ public class StockDAO implements IStockDAO {
     @Override
     public Stock getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        Stock stock = null;
+        List<Stock> stocks = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY)) {
             preparedStatement.setLong(1, id);
 
             ResultSet result = preparedStatement.executeQuery();
 
             if (result.next()) {
-                stock = mapResultSetToStock(result);
+                mapRow(result, stocks);
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -63,7 +117,7 @@ public class StockDAO implements IStockDAO {
             CONNECTION_POOL.releaseConnection(connection);
         }
 
-        return stock;
+        return stocks.get(0);
     }
 
     @Override
@@ -75,8 +129,7 @@ public class StockDAO implements IStockDAO {
             ResultSet result = preparedStatement.executeQuery();
 
             while (result.next()) {
-                Stock stock = mapResultSetToStock(result);
-                stocks.add(stock);
+                mapRow(result, stocks);
             }
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -123,29 +176,6 @@ public class StockDAO implements IStockDAO {
     }
 
     @Override
-    public List<Product> getProductsByStockId(Long stockId) {
-        List<Product> products = new ArrayList<>();
-        Connection connection = CONNECTION_POOL.getConnection();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_PRODUCTS_BY_STOCK_ID_QUERY)) {
-            preparedStatement.setLong(1, stockId);
-
-            ResultSet result = preparedStatement.executeQuery();
-
-            while (result.next()) {
-                Product product = mapResultSetToProduct(result);
-                products.add(product);
-            }
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-
-        return products;
-    }
-
-    @Override
     public void addProductToStock(Long stockId, Long productId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(ADD_PRODUCT_TO_STOCK_QUERY)) {
@@ -181,21 +211,4 @@ public class StockDAO implements IStockDAO {
         }
     }
 
-    private Stock mapResultSetToStock(ResultSet result) throws SQLException {
-        Stock stock = new Stock();
-        stock.setId(result.getLong("id"));
-        stock.setName(result.getString("name"));
-
-        return stock;
-    }
-
-    private Product mapResultSetToProduct(ResultSet result) throws SQLException {
-        Product product = new Product();
-        product.setId(result.getLong("id"));
-        product.setProductNumber(result.getString("product_number"));
-        product.setName(result.getString("name"));
-        product.setPrice(result.getDouble("price"));
-
-        return product;
-    }
 }
