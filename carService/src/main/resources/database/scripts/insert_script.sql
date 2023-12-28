@@ -1,10 +1,10 @@
-insert into adresses
+insert into addresses
             (city,street,building_number,postal_code)
      values ('Bialystok','Zwierzyniecka','12','17-200'),
 			('Warsaw','Animals','12','22-532');
 
 insert into workshops
-            (adresses_id,name,nip)
+            (addresses_id,name,nip)
      values (1,'Konrad\'s Car Service','0123456789'),
 			(2,'Pablo\'s Car Service','0123456789');
 
