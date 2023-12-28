@@ -1,12 +1,11 @@
 package com.solvd.laba.persistence.people.impl;
 
-import com.solvd.laba.domain.contract.Contract;
-import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.ConnectionPool;
 import com.solvd.laba.persistence.account.impl.AccountDAO;
 import com.solvd.laba.persistence.contract.impl.ContractDAO;
 import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
+import com.solvd.laba.persistence.order.impl.ServiceOrderDAO;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,8 +28,11 @@ public class EmployeeDAO implements IEmployeeDAO {
             "                    b.id AS bonus_payment_id, b.amount AS bonus_payment_amount, b.description AS bonus_payment_description," +
             "                    c.id AS contract_id, c.start_date AS contract_start_date, c.end_date AS contract_end_date, " +
             "                    c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active, " +
-            "                    a.id AS account_id, a.login as account_login, a.password as account_password, r.id AS role_id, r.name AS role_name " +
+            "                    a.id AS account_id, a.login as account_login, a.password as account_password, r.id AS role_id, r.name AS role_name, " +
+            "                    so.id AS service_order_id, so.date AS service_order_date, so.completed AS service_order_completed, so.description AS service_order_description " +
             "                    FROM employees e " +
+
+            "                    LEFT JOIN service_orders so ON e.id = so.employees_id " +
             "                    LEFT JOIN monthly_payments m ON e.id = m.employees_id " +
             "                    LEFT JOIN bonus_payments b ON m.id = b.monthly_payments_id " +
             "                    LEFT JOIN contracts c ON e.id = c.employees_id" +
@@ -71,13 +73,13 @@ public class EmployeeDAO implements IEmployeeDAO {
             employee.setPhoneNumber(resultSet.getString("employee_phone_number"));
             employee.setPosition(resultSet.getString("employee_position"));
 
-            List<MonthlyPayment> monthlyPayments = MonthlyPaymentDAO.mapMonthlyPayments(resultSet, employee.getMonthlyPayments());
-            employee.setMonthlyPayments(monthlyPayments);
+            employee.setMonthlyPayments(MonthlyPaymentDAO.mapMonthlyPayments(resultSet, employee.getMonthlyPayments()));
 
-            List<Contract> contracts = ContractDAO.mapRow(resultSet, employee.getContracts());
-            employee.setContracts(contracts);
+            employee.setContracts(ContractDAO.mapRow(resultSet, employee.getContracts()));
 
             employee.setAccount(AccountDAO.mapAccount(resultSet));
+
+            employee.setServiceOrders(ServiceOrderDAO.mapRow(resultSet, employee.getServiceOrders()));
 
             employees.add(employee);
 
