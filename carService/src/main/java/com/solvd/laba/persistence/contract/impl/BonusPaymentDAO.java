@@ -19,7 +19,6 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM bonus_payments WHERE id = ?";
-    /*   private static final String GET_ALL_QUERY = "SELECT * FROM bonus_payments";*/
     private static final String UPDATE_QUERY = "UPDATE bonus_payments SET amount = ?, description = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM bonus_payments WHERE id = ?";
     private static final String GET_BONUS_PAYMENTS_BY_MONTHLY_PAYMENT_ID_QUERY = "SELECT * FROM bonus_payments WHERE monthly_payments_id = ?";
@@ -36,7 +35,7 @@ public class BonusPaymentDAO implements IBonusPaymentDAO {
             BonusPayment bonusPayment = findById(id, bonusPayments);
             bonusPayment.setAmount(resultSet.getDouble("bonus_payment_amount"));
             bonusPayment.setDescription(resultSet.getString("bonus_payment_description"));
-            
+
         }
         return bonusPayments;
     }
