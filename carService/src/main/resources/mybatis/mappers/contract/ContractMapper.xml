@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.laba.persistence.contract.IContractDAO">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO contracts (start_date, end_date, type, salary, active, employees_id) VALUES (#{start_date},
+        #{end_date}, #{type}, #{salary}, #{active}, #{employees_id})
+    </insert>
+
+    <sql id="contractSelect">
+        SELECT id as contract_id, start_date as contract_start_date, end_date as contract_end_date, type as
+        contract_type, salary as contract_salary, active as contract_active FROM contracts
+    </sql>
+
+    <select id="getById" resultMap="ContractResult">
+        <include refid="contractSelect"/>
+        WHERE id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE contracts SET start_date = #{start_date}, end_date = #{end_date}, type = #{type}, salary = #{salary},
+        active = #{active} WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM contracts WHERE id = #{id}
+    </delete>
+
+    <resultMap id="ContractResult" type="com.solvd.laba.domain.contract.Contract" autoMapping="false">
+        <id column="contract_id" property="id"/>
+
+        <result column="contract_start_date" property="startDate"/>
+        <result column="contract_end_date" property="endDate"/>
+        <result column="contract_type" property="type"/>
+        <result column="contract_salary" property="salary"/>
+        <result column="contract_active" property="active"/>
+    </resultMap>
+</mapper>
