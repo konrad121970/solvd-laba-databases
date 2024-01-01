@@ -3,19 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.solvd.laba.persistence.contract.IBonusPaymentDAO">
+<mapper namespace="com.solvd.laba.persistence.people.IEmployeeDAO">
 
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (#{amount}, #{description},
         #{monthly_payments_id})
     </insert>
 
-    <sql id="bonusPaymentSelect">
+    <sql id="employeeSelect">
         SELECT * FROM bonus_payments
     </sql>
 
-    <select id="getById" resultType="BonusPayment">
-        <include refid="bonusPaymentSelect"/>
+    <select id="getById" resultType="Employee">
+        <include refid="employeeSelect"/>
         WHERE id = #{id}
     </select>
 
@@ -27,11 +27,10 @@
         DELETE FROM bonus_payments WHERE id = ?
     </delete>
 
-    <resultMap id="BonusPaymentResult" type="com.solvd.laba.domain.contract.BonusPayment" autoMapping="false">
-        <id column="bonus_payment_id" property="id"/>
+    <resultMap id="EmployeeResult" type="com.solvd.laba.domain.people.Employee" autoMapping="false">
+        <id column="employee_id" property="id"/>
 
-        <result column="bonus_payment_amount" property="amount"/>
-        <result column="bonus_payment_description" property="description"/>
+
     </resultMap>
 
 </mapper>

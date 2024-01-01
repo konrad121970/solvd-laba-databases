@@ -15,7 +15,7 @@
     </sql>
 
     <select id="getById" resultType="Contract">
-        <include refid="bonusPaymentSelect"/>
+        <include refid="contractSelect"/>
         WHERE id = #{id}
     </select>
 
@@ -27,11 +27,9 @@
         DELETE FROM bonus_payments WHERE id = ?
     </delete>
 
-    <resultMap id="BonusPaymentResult" type="com.solvd.laba.domain.contract.BonusPayment" autoMapping="false">
-        <id column="bonus_payment_id" property="id"/>
+    <resultMap id="ContractResult" type="com.solvd.laba.domain.contract.Contract" autoMapping="false">
+        <id column="contract_id" property="id"/>
 
-        <result column="bonus_payment_amount" property="amount"/>
-        <result column="bonus_payment_description" property="description"/>
     </resultMap>
 
 </mapper>
