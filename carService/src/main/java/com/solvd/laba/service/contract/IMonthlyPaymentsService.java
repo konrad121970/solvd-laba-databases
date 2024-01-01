@@ -14,9 +14,7 @@ public interface IMonthlyPaymentsService {
     void updateMonthlyPayment(MonthlyPayment monthlyPayment);
 
     void deleteMonthlyPayment(Long id);
-
-    List<BonusPayment> getBonusPaymentsByMonthlyPayment(MonthlyPayment monthlyPayment);
-
+    
     List<MonthlyPayment> getAllMonthlyPaymentsByEmployeeId(Long employeeId);
 
     void addBonusPaymentToMonthlyPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment);
