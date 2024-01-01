@@ -9,11 +9,11 @@ import java.io.InputStream;
 
 public class PersistenceConfig {
 
-    private static SqlSessionFactory sessionFactory;
+    private static final SqlSessionFactory sessionFactory;
 
     static {
-        try (InputStream is = Resources.getResourceAsStream("mybatis-config.xml")) {
-            SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder()
+        try (InputStream is = Resources.getResourceAsStream("mybatis/mybatis-config.xml")) {
+            sessionFactory = new SqlSessionFactoryBuilder()
                     .build(is);
         } catch (IOException e) {
             throw new RuntimeException(e);
