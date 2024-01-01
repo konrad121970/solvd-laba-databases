@@ -14,6 +14,7 @@ public class MonthlyPayment {
         bonusPaymentList = new ArrayList<>();
     }
 
+
     public Long getId() {
         return id;
     }

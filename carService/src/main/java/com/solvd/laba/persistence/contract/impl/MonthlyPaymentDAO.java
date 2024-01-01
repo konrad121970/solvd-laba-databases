@@ -10,18 +10,16 @@ import org.apache.logging.log4j.Logger;
 import java.lang.invoke.MethodHandles;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO monthly_payments (amount, payment_date, employees_id) VALUES (?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as monthly_payment_date, bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description as bonus_payment_description" +
+    private static final String GET_BY_ID_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as monthly_payment_date, bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description as bonus_payment_description " +
             "FROM monthly_payments mp " +
             "LEFT JOIN bonus_payments bp ON mp.id = bp.monthly_payments_id " +
-            "WHERE mp.id = ?";
+            "WHERE mp.id = ?;";
     private static final String GET_ALL_QUERY = "SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as monthly_payment_date, " +
             "bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description AS bonus_payment_description " +
             "FROM monthly_payments mp " +
@@ -113,32 +111,15 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
     @Override
     public MonthlyPayment getById(Long id) {
         Connection connection = CONNECTION_POOL.getConnection();
-        MonthlyPayment monthlyPayment = null;
+        List<MonthlyPayment> monthlyPayments = new ArrayList<>();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_QUERY)) {
             preparedStatement.setLong(1, id);
             ResultSet result = preparedStatement.executeQuery();
 
-            Map<Long, MonthlyPayment> monthlyPaymentsMap = new HashMap<>();
-
             while (result.next()) {
-                Long monthlyPaymentId = result.getLong("monthly_payment_id");
-
-                if (!monthlyPaymentsMap.containsKey(monthlyPaymentId)) {
-                    monthlyPayment = new MonthlyPayment();
-                    monthlyPayment.setId(monthlyPaymentId);
-                    monthlyPayment.setAmount(result.getDouble("amount"));
-                    monthlyPayment.setPaymentDate(result.getDate("payment_date"));
-                    monthlyPayment.setBonusPaymentList(new ArrayList<>());
-
-                    monthlyPaymentsMap.put(monthlyPaymentId, monthlyPayment);
-                }
-
-                List<BonusPayment> bonusPayments = BonusPaymentDAO.mapRow(result, monthlyPayment.getBonusPaymentList());
-                monthlyPayment.setBonusPaymentList(bonusPayments);
+                mapMonthlyPayments(result, monthlyPayments);
             }
-
-            monthlyPayment = new ArrayList<>(monthlyPaymentsMap.values()).get(0);
 
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
@@ -146,7 +127,7 @@ public class MonthlyPaymentDAO implements IMonthlyPaymentDAO {
             CONNECTION_POOL.releaseConnection(connection);
         }
 
-        return monthlyPayment;
+        return monthlyPayments.get(0);
     }
 
     @Override

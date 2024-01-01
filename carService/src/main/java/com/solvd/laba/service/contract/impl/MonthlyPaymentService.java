@@ -3,7 +3,7 @@ package com.solvd.laba.service.contract.impl;
 import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.persistence.contract.IMonthlyPaymentDAO;
-import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
+import com.solvd.laba.persistence.contract.impl.mybatis.MonthlyPaymentMyBatisImpl;
 import com.solvd.laba.service.contract.IBonusPaymentService;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 
@@ -16,7 +16,12 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
 
 
     public MonthlyPaymentService() {
-        this.monthlyPaymentDAO = new MonthlyPaymentDAO();
+/*
+        monthlyPaymentDAO = new MonthlyPaymentDAO();
+        bonusPaymentService = new BonusPaymentService();
+*/
+
+        monthlyPaymentDAO = new MonthlyPaymentMyBatisImpl();
         bonusPaymentService = new BonusPaymentService();
     }
 
@@ -54,7 +59,7 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
     public List<MonthlyPayment> getAllMonthlyPaymentsByEmployeeId(Long employeeId) {
         return monthlyPaymentDAO.getAllMonthlyPaymentsByEmployeeId(employeeId);
     }
-    
+
 
     @Override
     public void addBonusPaymentToMonthlyPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment) {

@@ -13,14 +13,14 @@
     <sql id="monthlyPaymentSelect">
         SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as
         monthly_payment_date, bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description as
-        bonus_payment_description" +
+        bonus_payment_description
         FROM monthly_payments mp
         LEFT JOIN bonus_payments bp ON mp.id = bp.monthly_payments_id
     </sql>
 
     <select id="getById" resultMap="MonthlyPaymentResult">
         <include refid="monthlyPaymentSelect"/>
-        WHERE id = #{id}
+        WHERE mp.id = #{id}
     </select>
 
     <update id="update">
@@ -35,11 +35,10 @@
         <id column="monthly_payment_id" property="id"/>
 
         <result column="monthly_payment_amount" property="amount"/>
-        <result column="monthly_payment_date" property="payment_date"/>
+        <result column="monthly_payment_date" property="paymentDate"/>
         <collection property="bonusPaymentList"
                     resultMap="com.solvd.laba.persistence.contract.IBonusPaymentDAO.BonusPaymentResult">
         </collection>
-
     </resultMap>
 
 </mapper>
