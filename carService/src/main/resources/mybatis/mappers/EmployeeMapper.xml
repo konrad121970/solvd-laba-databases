@@ -6,29 +6,57 @@
 <mapper namespace="com.solvd.laba.persistence.people.IEmployeeDAO">
 
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (#{amount}, #{description},
-        #{monthly_payments_id})
+        INSERT INTO employees (workshop_id, name, surname, phone_number, position) VALUES (#{workshop_id}, #{name},
+        #{surname}, #{phone_number}, #{position})
     </insert>
 
     <sql id="employeeSelect">
-        SELECT * FROM bonus_payments
+        SELECT e.id AS employee_id, e.name AS employee_name, e.surname AS employee_surname,
+        e.phone_number AS employee_phone_number, e.position AS employee_position,
+        m.id AS monthly_payment_id, m.amount AS monthly_payment_amount, m.payment_date AS monthly_payment_date,
+        b.id AS bonus_payment_id, b.amount AS bonus_payment_amount, b.description AS bonus_payment_description,
+        c.id AS contract_id, c.start_date AS contract_start_date, c.end_date AS contract_end_date,
+        c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active,
+        a.id AS account_id, a.login as account_login, a.password as account_password, r.id AS role_id, r.name AS
+        role_name,
+        so.id AS service_order_id, so.date AS service_order_date, so.completed AS service_order_completed,
+        so.description AS service_order_description
+        FROM employees e
+
+        LEFT JOIN service_orders so ON e.id = so.employees_id
+        LEFT JOIN monthly_payments m ON e.id = m.employees_id
+        LEFT JOIN bonus_payments b ON m.id = b.monthly_payments_id
+        LEFT JOIN contracts c ON e.id = c.employees_id
+        LEFT JOIN accounts a ON e.id = a.employees_id
+        LEFT JOIN roles_has_accounts ra ON a.id = ra.accounts_id
+        LEFT JOIN roles r ON ra.roles_id = r.id
     </sql>
 
-    <select id="getById" resultType="Employee">
+    <select id="getById" resultMap="EmployeeResult">
         <include refid="employeeSelect"/>
-        WHERE id = #{id}
+        WHERE e.id = #{id}
     </select>
 
     <update id="update">
-        UPDATE bonus_payments SET amount = #{amount}, description = #{description} WHERE id = #{id}
+        UPDATE employees SET workshop_id = #{workshop_id}, name = #{name}, surname = #{surname}, phone_number =
+        #{phone_number}, position = #{position} WHERE id = #{id}
     </update>
 
     <delete id="delete">
-        DELETE FROM bonus_payments WHERE id = ?
+        DELETE FROM employees WHERE id = ?
     </delete>
 
     <resultMap id="EmployeeResult" type="com.solvd.laba.domain.people.Employee" autoMapping="false">
         <id column="employee_id" property="id"/>
+
+        <result column="employee_name" property="name"/>
+        <result column="employee_surname" property="surname"/>
+        <result column="employee_phone_number" property="phoneNumber"/>
+        <result column="employee_position" property="position"/>
+
+        <collection property="monthlyPayments"
+                    resultMap="com.solvd.laba.domain.contract.IMonthlyPaymentDao.MonthlyPaymentResult"/>
+        <collection property="contracts" resultMap="com.solvd.laba.domain.contract.IContractDAO.ContractResult"/>
 
 
     </resultMap>

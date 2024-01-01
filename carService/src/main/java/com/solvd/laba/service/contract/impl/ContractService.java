@@ -2,17 +2,16 @@ package com.solvd.laba.service.contract.impl;
 
 import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.persistence.contract.IContractDAO;
-import com.solvd.laba.persistence.contract.impl.ContractDAO;
+import com.solvd.laba.persistence.contract.impl.mybatis.ContractMyBatisImpl;
 import com.solvd.laba.service.contract.IContractService;
-
-import java.util.List;
 
 public class ContractService implements IContractService {
 
     private final IContractDAO contractDAO;
 
     public ContractService() {
-        this.contractDAO = new ContractDAO();
+        // contractDAO = new ContractDAO();
+        contractDAO = new ContractMyBatisImpl();
     }
 
     @Override
@@ -25,10 +24,6 @@ public class ContractService implements IContractService {
         return contractDAO.getById(id);
     }
 
-    @Override
-    public List<Contract> getAllContracts() {
-        return contractDAO.getAll();
-    }
 
     @Override
 

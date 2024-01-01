@@ -36,9 +36,9 @@
 
         <result column="monthly_payment_amount" property="amount"/>
         <result column="monthly_payment_date" property="paymentDate"/>
+
         <collection property="bonusPaymentList"
-                    resultMap="com.solvd.laba.persistence.contract.IBonusPaymentDAO.BonusPaymentResult">
-        </collection>
+                    resultMap="com.solvd.laba.persistence.contract.IBonusPaymentDAO.BonusPaymentResult"/>
     </resultMap>
 
 </mapper>
