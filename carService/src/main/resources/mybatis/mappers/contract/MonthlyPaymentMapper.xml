@@ -24,7 +24,7 @@
     </select>
 
     <update id="update">
-        UPDATE monthly_payments SET amount = #{amount}, payment_date = #{payment_date} WHERE id = #{id}
+        UPDATE monthly_payments SET amount = #{amount}, payment_date = #{paymentDate} WHERE id = #{id}
     </update>
 
     <delete id="delete">
