@@ -6,32 +6,40 @@
 <mapper namespace="com.solvd.laba.persistence.contract.IMonthlyPaymentDAO">
 
     <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (#{amount}, #{description},
-        #{monthly_payments_id})
+        INSERT INTO monthly_payments (amount, payment_date, employees_id) VALUES (#{amount}, #{payment_date},
+        #{employees_id})
     </insert>
 
     <sql id="monthlyPaymentSelect">
-        SELECT * FROM bonus_payments
+        SELECT mp.id AS monthly_payment_id, mp.amount as monthly_payment_amount, mp.payment_date as
+        monthly_payment_date, bp.id AS bonus_payment_id, bp.amount AS bonus_payment_amount, bp.description as
+        bonus_payment_description" +
+        FROM monthly_payments mp
+        LEFT JOIN bonus_payments bp ON mp.id = bp.monthly_payments_id
     </sql>
 
-    <select id="getById" resultType="MonthlyPayment">
+    <select id="getById" resultMap="MonthlyPaymentResult">
         <include refid="monthlyPaymentSelect"/>
         WHERE id = #{id}
     </select>
 
     <update id="update">
-        UPDATE bonus_payments SET amount = #{amount}, description = #{description} WHERE id = #{id}
+        UPDATE monthly_payments SET amount = #{amount}, payment_date = #{payment_date} WHERE id = #{id}
     </update>
 
     <delete id="delete">
-        DELETE FROM bonus_payments WHERE id = ?
+        DELETE FROM monthly_payments WHERE id = #{id}
     </delete>
 
     <resultMap id="MonthlyPaymentResult" type="com.solvd.laba.domain.contract.MonthlyPayment" autoMapping="false">
         <id column="monthly_payment_id" property="id"/>
 
-        <!--        <result column="bonus_payment_amount" property="amount"/>
-                <result column="bonus_payment_description" property="description"/>-->
+        <result column="monthly_payment_amount" property="amount"/>
+        <result column="monthly_payment_date" property="payment_date"/>
+        <collection property="bonusPaymentList"
+                    resultMap="com.solvd.laba.persistence.contract.IBonusPaymentDAO.BonusPaymentResult">
+        </collection>
+
     </resultMap>
 
 </mapper>

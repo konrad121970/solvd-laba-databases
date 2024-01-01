@@ -11,7 +11,8 @@
     </insert>
 
     <sql id="bonusPaymentSelect">
-        SELECT * FROM bonus_payments
+        SELECT id as bonus_payment_id, amount as bonus_payment_amount, description as bonus_payment_description FROM
+        bonus_payments
     </sql>
 
     <select id="getById" resultType="BonusPayment">
@@ -24,7 +25,7 @@
     </update>
 
     <delete id="delete">
-        DELETE FROM bonus_payments WHERE id = ?
+        DELETE FROM bonus_payments WHERE id = #{id}
     </delete>
 
     <resultMap id="BonusPaymentResult" type="com.solvd.laba.domain.contract.BonusPayment" autoMapping="false">
