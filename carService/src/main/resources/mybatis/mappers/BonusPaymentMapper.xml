@@ -15,7 +15,7 @@
         bonus_payments
     </sql>
 
-    <select id="getById" resultType="BonusPayment">
+    <select id="getById" resultMap="BonusPaymentResult">
         <include refid="bonusPaymentSelect"/>
         WHERE id = #{id}
     </select>

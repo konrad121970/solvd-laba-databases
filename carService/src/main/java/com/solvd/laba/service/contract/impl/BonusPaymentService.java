@@ -2,7 +2,7 @@ package com.solvd.laba.service.contract.impl;
 
 import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.persistence.contract.IBonusPaymentDAO;
-import com.solvd.laba.persistence.contract.impl.BonusPaymentDAO;
+import com.solvd.laba.persistence.contract.impl.mybatis.BonusPaymentMyBatisImpl;
 import com.solvd.laba.service.contract.IBonusPaymentService;
 
 public class BonusPaymentService implements IBonusPaymentService {
@@ -10,7 +10,9 @@ public class BonusPaymentService implements IBonusPaymentService {
     private final IBonusPaymentDAO bonusPaymentDAO;
 
     public BonusPaymentService() {
-        this.bonusPaymentDAO = new BonusPaymentDAO();
+        // this.bonusPaymentDAO = new BonusPaymentDAO();
+
+        this.bonusPaymentDAO = new BonusPaymentMyBatisImpl();
     }
 
     @Override
