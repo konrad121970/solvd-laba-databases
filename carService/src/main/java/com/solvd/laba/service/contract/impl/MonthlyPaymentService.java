@@ -54,12 +54,7 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
     public List<MonthlyPayment> getAllMonthlyPaymentsByEmployeeId(Long employeeId) {
         return monthlyPaymentDAO.getAllMonthlyPaymentsByEmployeeId(employeeId);
     }
-
-
-    @Override
-    public List<BonusPayment> getBonusPaymentsByMonthlyPayment(MonthlyPayment monthlyPayment) {
-        return bonusPaymentService.getBonusPaymentsAssignedToMonthlyPayment(monthlyPayment.getId());
-    }
+    
 
     @Override
     public void addBonusPaymentToMonthlyPayment(MonthlyPayment monthlyPayment, BonusPayment bonusPayment) {

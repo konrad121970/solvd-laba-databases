@@ -5,8 +5,6 @@ import com.solvd.laba.persistence.contract.IBonusPaymentDAO;
 import com.solvd.laba.persistence.contract.impl.BonusPaymentDAO;
 import com.solvd.laba.service.contract.IBonusPaymentService;
 
-import java.util.List;
-
 public class BonusPaymentService implements IBonusPaymentService {
 
     private final IBonusPaymentDAO bonusPaymentDAO;
@@ -39,9 +37,5 @@ public class BonusPaymentService implements IBonusPaymentService {
         bonusPaymentDAO.delete(id);
     }
 
-    @Override
-    public List<BonusPayment> getBonusPaymentsAssignedToMonthlyPayment(Long id) {
-        return bonusPaymentDAO.getBonusPaymentsByMonthlyPaymentId(id);
-    }
 
 }

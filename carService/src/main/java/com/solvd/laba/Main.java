@@ -1,5 +1,6 @@
 package com.solvd.laba;
 
+import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.order.Invoice;
 import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.order.Vehicle;
@@ -7,6 +8,8 @@ import com.solvd.laba.domain.people.Customer;
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.domain.workshop.Workshop;
+import com.solvd.laba.service.contract.IBonusPaymentService;
+import com.solvd.laba.service.contract.impl.BonusPaymentService;
 import com.solvd.laba.service.order.IInvoiceService;
 import com.solvd.laba.service.order.IServiceOrderService;
 import com.solvd.laba.service.order.IVehicleService;
@@ -39,6 +42,9 @@ public class Main {
         IProductService productService = new ProductService();
         ICustomerService customerService = new CustomerService();
         IWorkshopService workshopService = new WorkshopService();
+        IBonusPaymentService bonusPaymentService = new BonusPaymentService();
+
+        BonusPayment bonusPayment = bonusPaymentService.getBonusPaymentById(1L);
 
 
         Employee employee = employeeService.getEmployeeById(1L);

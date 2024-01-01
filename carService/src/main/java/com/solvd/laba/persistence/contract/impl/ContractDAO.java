@@ -18,8 +18,7 @@ public class ContractDAO implements IContractDAO {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
     private static final String CREATE_QUERY = "INSERT INTO contracts (start_date, end_date, type, salary, active, employees_id) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM contracts WHERE id = ?";
-    private static final String GET_ALL_QUERY = "SELECT * FROM contracts";
+    private static final String GET_BY_ID_QUERY = "SELECT id as contract_id, start_date as contract_start_date, end_date as contract_end_date, type as contract_type, salary as contract_salary, active as contract_active  FROM contracts WHERE id = ?";
     private static final String UPDATE_QUERY = "UPDATE contracts SET start_date = ?, end_date = ?, type = ?, salary = ?, active = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM contracts WHERE id = ?";
 
@@ -96,6 +95,7 @@ public class ContractDAO implements IContractDAO {
         return contract;
     }
 
+/*
     @Override
     public List<Contract> getAll() {
         List<Contract> contracts = new ArrayList<>();
@@ -116,6 +116,7 @@ public class ContractDAO implements IContractDAO {
 
         return contracts;
     }
+*/
 
     @Override
     public void update(Contract contract) {
@@ -160,12 +161,12 @@ public class ContractDAO implements IContractDAO {
 
     private Contract mapContract(ResultSet resultSet) throws SQLException {
         Contract contract = new Contract();
-        contract.setId(resultSet.getLong("id"));
-        contract.setStartDate(resultSet.getDate("start_date"));
-        contract.setEndDate(resultSet.getDate("end_date"));
-        contract.setType(resultSet.getString("type"));
-        contract.setSalary(resultSet.getDouble("salary"));
-        contract.setActive(resultSet.getBoolean("active"));
+        contract.setId(resultSet.getLong("contract_id"));
+        contract.setStartDate(resultSet.getDate("contract_start_date"));
+        contract.setEndDate(resultSet.getDate("contract_end_date"));
+        contract.setType(resultSet.getString("contract_type"));
+        contract.setSalary(resultSet.getDouble("contract_salary"));
+        contract.setActive(resultSet.getBoolean("contract_active"));
         return contract;
     }
 }
