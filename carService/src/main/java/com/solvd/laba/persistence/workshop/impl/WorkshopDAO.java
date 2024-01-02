@@ -63,9 +63,6 @@ public class WorkshopDAO implements IWorkshopDAO {
                     "LEFT JOIN vehicles v ON v.id = so.vehicles_id  " +
                     "WHERE w.id = ?";
 
-    private static final String GET_ALL_QUERY =
-            "SELECT * FROM workshops";
-
     private static final String UPDATE_WORKSHOP_QUERY =
             "UPDATE workshops SET addresses_id = ?, name = ?, nip = ? WHERE id = ?";
 
@@ -73,11 +70,11 @@ public class WorkshopDAO implements IWorkshopDAO {
             "DELETE FROM workshops WHERE id = ?";
 
     @Override
-    public void create(Workshop workshop) {
+    public void create(Workshop workshop, Long addressId) {
         Connection connection = CONNECTION_POOL.getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_QUERY)) {
 
-            preparedStatement.setLong(1, workshop.getAddress().getId());
+            preparedStatement.setLong(1, addressId);
             preparedStatement.setString(2, workshop.getName());
             preparedStatement.setString(3, workshop.getNip());
 

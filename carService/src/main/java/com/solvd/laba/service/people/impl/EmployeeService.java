@@ -3,7 +3,7 @@ package com.solvd.laba.service.people.impl;
 import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
-import com.solvd.laba.persistence.people.impl.EmployeeDAO;
+import com.solvd.laba.persistence.people.impl.mybatis.EmployeeMyBatisImpl;
 import com.solvd.laba.service.contract.IContractService;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 import com.solvd.laba.service.contract.impl.ContractService;
@@ -20,10 +20,16 @@ public class EmployeeService implements IEmployeeService {
     private final IServiceOrderService serviceOrderService;
 
     public EmployeeService() {
-        employeeDAO = new EmployeeDAO();
+        /*employeeDAO = new EmployeeDAO();
+        contractService = new ContractService();
+        monthlyPaymentsService = new MonthlyPaymentService();
+        serviceOrderService = new ServiceOrderService();*/
+
+        employeeDAO = new EmployeeMyBatisImpl();
         contractService = new ContractService();
         monthlyPaymentsService = new MonthlyPaymentService();
         serviceOrderService = new ServiceOrderService();
+
     }
 
     @Override

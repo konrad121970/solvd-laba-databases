@@ -11,8 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddressDAO implements IAddressDAO {
 
@@ -22,10 +20,10 @@ public class AddressDAO implements IAddressDAO {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM adresses WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM adresses";
     private static final String UPDATE_QUERY =
-            "UPDATE adresses SET city = ?, street = ?, building_number = ?, postal_code = ? WHERE id = ?";
+            "UPDATE addresses SET city = ?, street = ?, building_number = ?, postal_code = ? WHERE id = ?";
 
     private static final String DELETE_QUERY =
-            "DELETE FROM adresses WHERE id = ?";
+            "DELETE FROM addresses WHERE id = ?";
 
     static Address mapAddress(ResultSet result) throws SQLException {
         Address address = new Address();
@@ -33,6 +31,7 @@ public class AddressDAO implements IAddressDAO {
         address.setStreet(result.getString("address_street"));
         address.setCity(result.getString("address_city"));
         address.setPostalCode(result.getString("address_postal_code"));
+        address.setBuildingNumber(result.getString("address_building_number"));
 
         return address;
     }
@@ -80,32 +79,6 @@ public class AddressDAO implements IAddressDAO {
         return address;
     }
 
-    @Override
-    public List<Address> getAll() {
-        List<Address> addresses = new ArrayList<>();
-        Connection connection = CONNECTION_POOL.getConnection();
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_QUERY)) {
-            ResultSet result = preparedStatement.executeQuery();
-
-            while (result.next()) {
-                Address address = new Address();
-                address.setId(result.getLong("id"));
-                address.setCity(result.getString("city"));
-                address.setStreet(result.getString("street"));
-                address.setBuildingNumber(result.getString("building_number"));
-                address.setPostalCode(result.getString("postal_code"));
-
-                addresses.add(address);
-            }
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        } finally {
-            CONNECTION_POOL.releaseConnection(connection);
-        }
-
-        return addresses;
-    }
 
     @Override
     public void update(Address address) {

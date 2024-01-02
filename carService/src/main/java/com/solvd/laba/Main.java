@@ -1,6 +1,8 @@
 package com.solvd.laba;
 
 import com.solvd.laba.domain.contract.BonusPayment;
+import com.solvd.laba.domain.contract.Contract;
+import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.domain.order.Invoice;
 import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.order.Vehicle;
@@ -9,7 +11,11 @@ import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.domain.stock.Product;
 import com.solvd.laba.domain.workshop.Workshop;
 import com.solvd.laba.service.contract.IBonusPaymentService;
+import com.solvd.laba.service.contract.IContractService;
+import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 import com.solvd.laba.service.contract.impl.BonusPaymentService;
+import com.solvd.laba.service.contract.impl.ContractService;
+import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
 import com.solvd.laba.service.order.IInvoiceService;
 import com.solvd.laba.service.order.IServiceOrderService;
 import com.solvd.laba.service.order.IVehicleService;
@@ -28,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
+import java.sql.Date;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -43,11 +50,39 @@ public class Main {
         ICustomerService customerService = new CustomerService();
         IWorkshopService workshopService = new WorkshopService();
         IBonusPaymentService bonusPaymentService = new BonusPaymentService();
+        IMonthlyPaymentsService monthlyPaymentsService = new MonthlyPaymentService();
+        IContractService contractService = new ContractService();
 
-        BonusPayment bonusPayment = bonusPaymentService.getBonusPaymentById(1L);
+        // **** MyBatis ****
 
+        BonusPayment bonusPayment = new BonusPayment();
+        bonusPayment.setId(1L);
+        bonusPayment.setDescription("UPDATE TEST");
+        bonusPayment.setAmount(1000D);
+        bonusPaymentService.updateBonusPayment(bonusPayment);
+
+        bonusPayment = bonusPaymentService.getBonusPaymentById(1L);
+
+        MonthlyPayment monthlyPayment = new MonthlyPayment();
+        monthlyPayment.setId(1L);
+        monthlyPayment.setPaymentDate(new Date(2023 - 1900, 0, 1));
+        monthlyPayment.setAmount(2500D);
+        monthlyPaymentsService.updateMonthlyPayment(monthlyPayment);
+
+        MonthlyPayment monthlyPayment1 = new MonthlyPayment();
+        monthlyPayment1.setPaymentDate(new Date(2023 - 1900, 0, 13));
+        monthlyPayment1.setAmount(5000D);
+        monthlyPaymentsService.createMonthlyPayment(monthlyPayment1, 1L);
+
+        monthlyPayment = monthlyPaymentsService.getMonthlyPaymentById(1L);
+
+        Contract contract = contractService.getContractById(1L);
 
         Employee employee = employeeService.getEmployeeById(1L);
+
+        Workshop workshop = workshopService.getWorkshopById(1L);
+
+        // **** JDBC ****
 
         ServiceOrder serviceOrder = serviceOrderService.getServiceOrderById(1L);
 
@@ -59,9 +94,7 @@ public class Main {
 
         Customer customer = customerService.getCustomerById(1L);
 
-        Workshop workshop = workshopService.getWorkshopById(1L);
-
-        System.out.println("lol");
+        System.out.println("test");
 
 
     }
