@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.laba.persistence.workshop.IWorkshopDAO">
+
+    <insert id="create" keyColumn="id" keyProperty="workshop.id" useGeneratedKeys="true">
+        INSERT INTO workshops (addresses_id, name, nip) VALUES (#{addressId}, #{workshop.name}, #{workshop.nip})
+    </insert>
+
+    <sql id="workshopSelect">
+        SELECT
+        a.id AS address_id, a.city AS address_city, a.street AS address_street,
+        a.building_number AS address_building_number, a.postal_code AS address_postal_code,
+        w.id AS workshop_id, w.name AS workshop_name, w.nip AS workshop_nip,
+        s.id AS stock_id, s.name AS stock_name,
+        p.id AS product_id, p.product_number, p.name AS product_name, p.price AS product_price,
+        e.id AS employee_id, e.name AS employee_name, e.surname AS employee_surname, e.phone_number AS
+        employee_phone_number, e.position as employee_position,
+        c.id AS contract_id, c.start_date AS contract_start_date, c.end_date AS contract_end_date,
+        c.type AS contract_type, c.salary AS contract_salary, c.active AS contract_active,
+        m.id AS monthly_payment_id, m.amount AS monthly_payment_amount, m.payment_date AS monthly_payment_date,
+        b.id AS bonus_payment_id, b.amount AS bonus_payment_amount, b.description AS bonus_payment_description,
+        ac.id AS account_id, ac.login AS account_login, ac.password AS account_password,
+        r.id AS role_id, r.name AS role_name,
+        i.id AS invoice_id, i.date_time AS invoice_date_time, i.total_price AS invoice_total_price,
+        cst.id AS customer_id, cst.name AS customer_name, cst.surname AS customer_surname,
+        cst.email AS customer_email, cst.phone_number AS customer_phone_number,
+        v.id AS vehicle_id, v.vin, v.make, v.model, v.license_plate,
+        so.id AS service_order_id, so.vehicles_id, so.customers_id, so.date AS service_order_date,
+        so.completed AS service_order_completed, so.invoices_id AS service_order_invoices_id,
+        so.workshop_id AS service_order_workshop_id, so.employees_id AS service_order_employees_id,
+        so.description AS service_order_description
+        FROM addresses a
+        LEFT JOIN workshops w ON a.id = w.addresses_id
+        LEFT JOIN stocks s ON w.id = s.workshops_id
+        LEFT JOIN products p ON s.id = p.id
+        LEFT JOIN stocks_has_products sp ON s.id = sp.stocks_id
+        LEFT JOIN employees e ON w.id = e.workshop_id
+        LEFT JOIN contracts c ON e.id = c.employees_id
+        LEFT JOIN monthly_payments m ON e.id = m.employees_id
+        LEFT JOIN bonus_payments b ON m.id = b.monthly_payments_id
+        LEFT JOIN accounts ac ON e.id = ac.employees_id
+        LEFT JOIN roles_has_accounts ra ON ac.id = ra.accounts_id
+        LEFT JOIN roles r ON ra.roles_id = r.id
+        LEFT JOIN invoices_has_products ihp ON ihp.products_id = p.id
+        LEFT JOIN service_orders so ON w.id = so.workshop_id
+        LEFT JOIN invoices i ON i.id = ihp.invoices_id
+        LEFT JOIN customers cst ON cst.id = so.customers_id
+        LEFT JOIN vehicles v ON v.id = so.vehicles_id
+    </sql>
+
+    <select id="getById" resultMap="WorkshopResult">
+        <include refid="workshopSelect"/>
+        WHERE w.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE workshops SET addresses_id = #{addresses_id}, name = #{name}, nip = #{nip} WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM workshops WHERE id = #{id}
+    </delete>
+
+    <resultMap id="WorkshopResult" type="com.solvd.laba.domain.workshop.Workshop" autoMapping="false">
+        <id column="workshop_id" property="id"/>
+
+        <result column="workshop_name" property="name"/>
+        <result column="workshop_nip" property="nip"/>
+
+        <association property="address" resultMap="com.solvd.laba.persistence.workshop.IAddressDAO.AddressResult"/>
+
+        <collection property="employees" resultMap="com.solvd.laba.persistence.people.IEmployeeDAO.EmployeeResult"/>
+
+    </resultMap>
+
+</mapper>

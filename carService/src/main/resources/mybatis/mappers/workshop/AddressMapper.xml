@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.solvd.laba.persistence.workshop.IAddressDAO">
+
+    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO addresses (city, street, building_number, postal_code) VALUES (#{city}, #{street},
+        #{buildingNumber}, #{postalCode})
+    </insert>
+
+    <sql id="addressSelect">
+        SELECT a.id AS address_id, a.city AS address_city, a.street AS address_street,
+        a.building_number AS address_building_number, a.postal_code AS address_postal_code
+        FROM addresses a
+    </sql>
+
+    <select id="getById" resultMap="AddressResult">
+        <include refid="addressSelect"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE addresses SET city = #{city}, street = #{street}, building_number = #{buildingNumber}, postal_code =
+        #{postalCode} WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM addresses WHERE id = #{id}
+    </delete>
+
+    <resultMap id="AddressResult" type="com.solvd.laba.domain.workshop.Address" autoMapping="false">
+        <id column="address_id" property="id"/>
+
+        <result column="address_city" property="city"/>
+        <result column="address_street" property="street"/>
+        <result column="address_building_number" property="buildingNumber"/>
+        <result column="address_postal_code" property="postalCode"/>
+
+    </resultMap>
+
+</mapper>

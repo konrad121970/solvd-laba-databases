@@ -5,9 +5,10 @@
 
 <mapper namespace="com.solvd.laba.persistence.people.IEmployeeDAO">
 
-    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO employees (workshop_id, name, surname, phone_number, position) VALUES (#{workshop_id}, #{name},
-        #{surname}, #{phone_number}, #{position})
+    <insert id="create" keyColumn="id" keyProperty="employee.id" useGeneratedKeys="true">
+        INSERT INTO employees (workshop_id, name, surname, phone_number, position) VALUES (#{workshopId},
+        #{employee.name},
+        #{employee.surname}, #{employee.phone_number}, #{employee.position})
     </insert>
 
     <sql id="employeeSelect">
@@ -55,8 +56,8 @@
         <result column="employee_position" property="position"/>
 
         <collection property="monthlyPayments"
-                    resultMap="com.solvd.laba.domain.contract.IMonthlyPaymentDao.MonthlyPaymentResult"/>
-        <collection property="contracts" resultMap="com.solvd.laba.domain.contract.IContractDAO.ContractResult"/>
+                    resultMap="com.solvd.laba.persistence.contract.IMonthlyPaymentDAO.MonthlyPaymentResult"/>
+        <collection property="contracts" resultMap="com.solvd.laba.persistence.contract.IContractDAO.ContractResult"/>
 
 
     </resultMap>
