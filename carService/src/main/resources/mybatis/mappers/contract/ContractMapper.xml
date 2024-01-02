@@ -5,9 +5,9 @@
 
 <mapper namespace="com.solvd.laba.persistence.contract.IContractDAO">
 
-    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO contracts (start_date, end_date, type, salary, active, employees_id) VALUES (#{start_date},
-        #{end_date}, #{type}, #{salary}, #{active}, #{employees_id})
+    <insert id="create" keyColumn="id" keyProperty="contract.id" useGeneratedKeys="true">
+        INSERT INTO contracts (start_date, end_date, type, salary, active, employees_id) VALUES (#{contract.start_date},
+        #{contract.end_date}, #{contract.type}, #{contract.salary}, #{contract.active}, #{employeeId})
     </insert>
 
     <sql id="contractSelect">

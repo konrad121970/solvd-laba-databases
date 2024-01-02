@@ -5,9 +5,10 @@
 
 <mapper namespace="com.solvd.laba.persistence.contract.IBonusPaymentDAO">
 
-    <insert id="create" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (#{amount}, #{description},
-        #{monthly_payments_id})
+    <insert id="create" keyColumn="id" keyProperty="bonusPayment.id" useGeneratedKeys="true">
+        INSERT INTO bonus_payments (amount, description, monthly_payments_id) VALUES (#{bonusPayment.amount},
+        #{bonusPayment.description},
+        #{monthlyPaymentId})
     </insert>
 
     <sql id="bonusPaymentSelect">
