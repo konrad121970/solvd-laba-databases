@@ -8,7 +8,7 @@
     <insert id="create" keyColumn="id" keyProperty="employee.id" useGeneratedKeys="true">
         INSERT INTO employees (workshop_id, name, surname, phone_number, position) VALUES (#{workshopId},
         #{employee.name},
-        #{employee.surname}, #{employee.phone_number}, #{employee.position})
+        #{employee.surname}, #{employee.phoneNumber}, #{employee.position})
     </insert>
 
     <sql id="employeeSelect">

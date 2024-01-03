@@ -21,8 +21,7 @@
     </environments>
 
     <mappers>
-        <mapper resource="mybatis/mappers/EmployeeMapper.xml"/>
-
+        <mapper resource="mybatis/mappers/people/EmployeeMapper.xml"/>
         <mapper resource="mybatis/mappers/workshop/WorkshopMapper.xml"/>
         <mapper resource="mybatis/mappers/workshop/AddressMapper.xml"/>
         <mapper resource="mybatis/mappers/contract/ContractMapper.xml"/>
