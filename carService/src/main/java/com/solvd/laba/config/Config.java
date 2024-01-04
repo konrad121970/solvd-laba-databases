@@ -8,10 +8,10 @@ public enum Config {
     URL("url"),
     USER("user"),
     PASSWORD("password"),
-    POOL_SIZE("poolSize");
+    POOL_SIZE("poolSize"),
+    IMPL("impl");
 
-    private final String key;
-    private static Properties properties;
+    private static final Properties properties;
 
     static {
         properties = new Properties();
@@ -25,6 +25,8 @@ public enum Config {
             e.printStackTrace();
         }
     }
+
+    private final String key;
 
     Config(String key) {
         this.key = key;
