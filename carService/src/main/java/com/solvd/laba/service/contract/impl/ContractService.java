@@ -1,17 +1,32 @@
 package com.solvd.laba.service.contract.impl;
 
+import com.solvd.laba.config.Config;
 import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.persistence.contract.IContractDAO;
+import com.solvd.laba.persistence.contract.impl.ContractDAO;
 import com.solvd.laba.persistence.contract.impl.mybatis.ContractMyBatisImpl;
 import com.solvd.laba.service.contract.IContractService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.lang.invoke.MethodHandles;
 
 public class ContractService implements IContractService {
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IContractDAO contractDAO;
 
     public ContractService() {
-        // contractDAO = new ContractDAO();
-        contractDAO = new ContractMyBatisImpl();
+
+        if (Config.IMPL.getValue().equals("jdbc")) {
+            contractDAO = new ContractDAO();
+        } else if (Config.IMPL.getValue().equals("myBatis")) {
+            contractDAO = new ContractMyBatisImpl();
+        } else {
+            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
+            contractDAO = new ContractDAO();
+        }
     }
 
     @Override

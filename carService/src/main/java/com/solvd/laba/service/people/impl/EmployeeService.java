@@ -1,8 +1,10 @@
 package com.solvd.laba.service.people.impl;
 
+import com.solvd.laba.config.Config;
 import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
+import com.solvd.laba.persistence.people.impl.EmployeeDAO;
 import com.solvd.laba.persistence.people.impl.mybatis.EmployeeMyBatisImpl;
 import com.solvd.laba.service.contract.IContractService;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
@@ -11,8 +13,14 @@ import com.solvd.laba.service.contract.impl.MonthlyPaymentService;
 import com.solvd.laba.service.order.IServiceOrderService;
 import com.solvd.laba.service.order.impl.ServiceOrderService;
 import com.solvd.laba.service.people.IEmployeeService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.lang.invoke.MethodHandles;
 
 public class EmployeeService implements IEmployeeService {
+
+    private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
     private final IEmployeeDAO employeeDAO;
     private final IContractService contractService;
@@ -20,16 +28,24 @@ public class EmployeeService implements IEmployeeService {
     private final IServiceOrderService serviceOrderService;
 
     public EmployeeService() {
-        /*employeeDAO = new EmployeeDAO();
-        contractService = new ContractService();
-        monthlyPaymentsService = new MonthlyPaymentService();
-        serviceOrderService = new ServiceOrderService();*/
 
-        employeeDAO = new EmployeeMyBatisImpl();
-        contractService = new ContractService();
-        monthlyPaymentsService = new MonthlyPaymentService();
-        serviceOrderService = new ServiceOrderService();
-
+        if (Config.IMPL.getValue().equals("jdbc")) {
+            employeeDAO = new EmployeeDAO();
+            contractService = new ContractService();
+            monthlyPaymentsService = new MonthlyPaymentService();
+            serviceOrderService = new ServiceOrderService();
+        } else if (Config.IMPL.getValue().equals("myBatis")) {
+            employeeDAO = new EmployeeMyBatisImpl();
+            contractService = new ContractService();
+            monthlyPaymentsService = new MonthlyPaymentService();
+            serviceOrderService = new ServiceOrderService();
+        } else {
+            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
+            employeeDAO = new EmployeeDAO();
+            contractService = new ContractService();
+            monthlyPaymentsService = new MonthlyPaymentService();
+            serviceOrderService = new ServiceOrderService();
+        }
     }
 
     @Override
