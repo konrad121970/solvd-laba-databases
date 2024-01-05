@@ -46,7 +46,7 @@ public class XMLEmployeeParser extends DefaultHandler {
             case "monthlyPayment":
                 currentMonthlyPayment = new MonthlyPayment();
                 if (monthlyPayments == null) {
-                    monthlyPayments = new ArrayList<MonthlyPayment>();
+                    monthlyPayments = new ArrayList<>();
                 }
                 break;
             case "bonusPayment":
@@ -62,14 +62,8 @@ public class XMLEmployeeParser extends DefaultHandler {
     }
 
     @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
-        currentElementValue.append(ch, start, length);
-    }
-
-    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         String value = currentElementValue.toString().trim();
-        //  SimpleDateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd");
 
         switch (qName) {
             case "id":
