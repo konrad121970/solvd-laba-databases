@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeParser extends DefaultHandler {
+public class XMLEmployeeParser extends DefaultHandler {
     private StringBuilder currentElementValue;
     private Employee employee;
     private Contract currentContract;
