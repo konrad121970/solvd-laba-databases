@@ -35,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.Date;
+import java.util.List;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -74,11 +75,29 @@ public class Main {
         monthlyPayment1.setAmount(5000D);
         monthlyPaymentsService.createMonthlyPayment(monthlyPayment1, 1L);
 
+        Contract contract = new Contract();
+        contract.setActive(true);
+        contract.setStartDate(new Date(2023 - 1900, 0, 1));
+        contract.setEndDate(new Date(2023 - 1900, 0, 1));
+        contract.setType("Full-Time");
+        contract.setSalary(2000D);
+
+
+        Employee employee = new Employee();
+        employee.setName("konrad");
+        employee.setSurname("tee");
+        employee.setContracts(List.of(contract));
+        employee.setPhoneNumber("123123123");
+        employee.setPosition("Mechanic");
+
+
+        employeeService.createEmployee(employee, 1L);
+
         monthlyPayment = monthlyPaymentsService.getMonthlyPaymentById(1L);
 
-        Contract contract = contractService.getContractById(1L);
+        //Contract contract = contractService.getContractById(1L);
 
-        Employee employee = employeeService.getEmployeeById(1L);
+        /* Employee employee = employeeService.getEmployeeById(1L);*/
 
         Workshop workshop = workshopService.getWorkshopById(1L);
 
