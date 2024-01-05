@@ -62,6 +62,11 @@ public class XMLEmployeeParser extends DefaultHandler {
     }
 
     @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        currentElementValue.append(ch, start, length);
+    }
+
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         String value = currentElementValue.toString().trim();
 
