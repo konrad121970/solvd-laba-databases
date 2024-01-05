@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Define Employee Type -->
+    <xs:complexType name="employee">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+            <xs:element name="phoneNumber" type="xs:string"/>
+            <xs:element name="position" type="xs:string"/>
+            <xs:element name="contracts" type="contracts"/>
+            <xs:element name="monthlyPayments" type="monthlyPayments"/>
+            <xs:element name="account" type="account"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define Contracts Type -->
+    <xs:complexType name="contracts">
+        <xs:sequence>
+            <xs:element name="contract" type="contract" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define Contract Type -->
+    <xs:complexType name="contract">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="startDate" type="xs:date"/>
+            <xs:element name="endDate" type="xs:date"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="salary" type="xs:double"/>
+            <xs:element name="active" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define MonthlyPayments Type -->
+    <xs:complexType name="monthlyPayments">
+        <xs:sequence>
+            <xs:element name="monthlyPayment" type="monthlyPayment" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define MonthlyPayment Type -->
+    <xs:complexType name="monthlyPayment">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="amount" type="xs:double"/>
+            <xs:element name="paymentDate" type="xs:date"/>
+            <xs:element name="bonusPayments" type="bonusPayments"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define BonusPayments Type -->
+    <xs:complexType name="bonusPayments">
+        <xs:sequence>
+            <xs:element name="bonusPayment" type="bonusPayment" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define BonusPayment Type -->
+    <xs:complexType name="bonusPayment">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="amount" type="xs:double"/>
+            <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define Account Type -->
+    <xs:complexType name="account">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="login" type="xs:string"/>
+            <xs:element name="password" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define Root Element -->
+    <xs:element name="employee" type="employee"/>
+
+</xs:schema>

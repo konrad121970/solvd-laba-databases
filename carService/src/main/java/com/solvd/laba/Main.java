@@ -1,8 +1,6 @@
 package com.solvd.laba;
 
-import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.contract.Contract;
-import com.solvd.laba.domain.contract.MonthlyPayment;
 import com.solvd.laba.domain.order.Invoice;
 import com.solvd.laba.domain.order.ServiceOrder;
 import com.solvd.laba.domain.order.Vehicle;
@@ -34,8 +32,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Date;
-import java.util.List;
 
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
@@ -56,48 +52,50 @@ public class Main {
 
         // **** MyBatis ****
 
-        BonusPayment bonusPayment = new BonusPayment();
-        bonusPayment.setId(1L);
-        bonusPayment.setDescription("UPDATE TEST");
-        bonusPayment.setAmount(1000D);
-        bonusPaymentService.updateBonusPayment(bonusPayment);
+//        BonusPayment bonusPayment = new BonusPayment();
+//        bonusPayment.setId(1L);
+//        bonusPayment.setDescription("UPDATE TEST");
+//        bonusPayment.setAmount(1000D);
+//        bonusPaymentService.updateBonusPayment(bonusPayment);
+//
+//        bonusPayment = bonusPaymentService.getBonusPaymentById(1L);
+//
+//        MonthlyPayment monthlyPayment = new MonthlyPayment();
+//        monthlyPayment.setId(1L);
+//        monthlyPayment.setPaymentDate(new Date(2023 - 1900, 0, 1));
+//        monthlyPayment.setAmount(2500D);
+//        monthlyPaymentsService.updateMonthlyPayment(monthlyPayment);
+//
+//        MonthlyPayment monthlyPayment1 = new MonthlyPayment();
+//        monthlyPayment1.setPaymentDate(new Date(2023 - 1900, 0, 13));
+//        monthlyPayment1.setAmount(5000D);
+//        monthlyPaymentsService.createMonthlyPayment(monthlyPayment1, 1L);
+//
+//        Contract contract = new Contract();
+//        contract.setActive(true);
+//        contract.setStartDate(new Date(2023 - 1900, 0, 1));
+//        contract.setEndDate(new Date(2023 - 1900, 0, 1));
+//        contract.setType("Full-Time");
+//        contract.setSalary(2000D);
+//
+//
+//        Employee employee = new Employee();
+//        employee.setName("konrad");
+//        employee.setSurname("tee");
+//        employee.setContracts(List.of(contract));
+//        employee.setPhoneNumber("123123123");
+//        employee.setPosition("Mechanic");
 
-        bonusPayment = bonusPaymentService.getBonusPaymentById(1L);
 
-        MonthlyPayment monthlyPayment = new MonthlyPayment();
-        monthlyPayment.setId(1L);
-        monthlyPayment.setPaymentDate(new Date(2023 - 1900, 0, 1));
-        monthlyPayment.setAmount(2500D);
-        monthlyPaymentsService.updateMonthlyPayment(monthlyPayment);
+//        employeeService.createEmployee(employee, 1L);
+//
+//        monthlyPayment = monthlyPaymentsService.getMonthlyPaymentById(1L);
 
-        MonthlyPayment monthlyPayment1 = new MonthlyPayment();
-        monthlyPayment1.setPaymentDate(new Date(2023 - 1900, 0, 13));
-        monthlyPayment1.setAmount(5000D);
-        monthlyPaymentsService.createMonthlyPayment(monthlyPayment1, 1L);
+        Contract contract = contractService.getContractById(1L);
 
-        Contract contract = new Contract();
-        contract.setActive(true);
-        contract.setStartDate(new Date(2023 - 1900, 0, 1));
-        contract.setEndDate(new Date(2023 - 1900, 0, 1));
-        contract.setType("Full-Time");
-        contract.setSalary(2000D);
+        String s = contract.getEndDate().toString();
 
-
-        Employee employee = new Employee();
-        employee.setName("konrad");
-        employee.setSurname("tee");
-        employee.setContracts(List.of(contract));
-        employee.setPhoneNumber("123123123");
-        employee.setPosition("Mechanic");
-
-
-        employeeService.createEmployee(employee, 1L);
-
-        monthlyPayment = monthlyPaymentsService.getMonthlyPaymentById(1L);
-
-        //Contract contract = contractService.getContractById(1L);
-
-        /* Employee employee = employeeService.getEmployeeById(1L);*/
+        Employee employee = employeeService.getEmployeeById(1L);
 
         Workshop workshop = workshopService.getWorkshopById(1L);
 
@@ -112,6 +110,7 @@ public class Main {
         Product product = productService.getProductById(1L);
 
         Customer customer = customerService.getCustomerById(1L);
+
 
         System.out.println("test");
 

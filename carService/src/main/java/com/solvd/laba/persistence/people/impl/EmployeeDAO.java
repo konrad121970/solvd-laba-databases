@@ -2,7 +2,6 @@ package com.solvd.laba.persistence.people.impl;
 
 import com.solvd.laba.domain.people.Employee;
 import com.solvd.laba.persistence.ConnectionPool;
-import com.solvd.laba.persistence.account.impl.AccountDAO;
 import com.solvd.laba.persistence.contract.impl.ContractDAO;
 import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
 import com.solvd.laba.persistence.order.impl.ServiceOrderDAO;
@@ -77,7 +76,7 @@ public class EmployeeDAO implements IEmployeeDAO {
 
             employee.setContracts(ContractDAO.mapRow(resultSet, employee.getContracts()));
 
-            employee.setAccount(AccountDAO.mapAccount(resultSet));
+            // employee.setAccount(AccountDAO.mapAccount(resultSet));
 
             employee.setServiceOrders(ServiceOrderDAO.mapRow(resultSet, employee.getServiceOrders()));
 
