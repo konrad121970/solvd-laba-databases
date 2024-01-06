@@ -1,5 +1,9 @@
 package com.solvd.laba.parsers.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class Person {
 
     private Long id;

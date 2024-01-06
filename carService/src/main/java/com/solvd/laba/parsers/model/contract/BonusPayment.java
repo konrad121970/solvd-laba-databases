@@ -1,5 +1,9 @@
 package com.solvd.laba.parsers.model.contract;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BonusPayment {
     private Long id;
     private Double amount;

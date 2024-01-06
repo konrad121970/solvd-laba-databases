@@ -1,14 +1,13 @@
 package com.solvd.laba.parsers.model;
 
-import com.solvd.laba.domain.account.Role;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 
-import java.util.Set;
-
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Account {
     private Long id;
     private String login;
     private String password;
-    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -34,21 +33,12 @@ public class Account {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", roles=" + roles +
                 '}';
     }
 }
