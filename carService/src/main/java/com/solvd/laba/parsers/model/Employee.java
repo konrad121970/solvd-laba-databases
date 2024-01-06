@@ -3,14 +3,21 @@ package com.solvd.laba.parsers.model;
 
 import com.solvd.laba.parsers.model.contract.Contract;
 import com.solvd.laba.parsers.model.contract.MonthlyPayment;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlRootElement(name = "employee")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Employee extends Person {
     private String position;
     private Account account;
+    @XmlElementWrapper(name = "monthlyPayments")
+    @XmlElement(name = "monthlyPayment")
     private List<MonthlyPayment> monthlyPayments;
+    @XmlElementWrapper(name = "contracts")
+    @XmlElement(name = "contract")
     private List<Contract> contracts;
 
     public Employee() {
