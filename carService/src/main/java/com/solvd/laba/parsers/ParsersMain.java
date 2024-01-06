@@ -3,6 +3,9 @@ package com.solvd.laba.parsers;
 
 import com.solvd.laba.parsers.model.Employee;
 import com.solvd.laba.parsers.sax.XMLEmployeeParser;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -52,8 +55,18 @@ public class ParsersMain {
         XMLEmployeeParser XMLEmployeeParser = new XMLEmployeeParser();
         saxParser.parse(new File(xmlFilePath), XMLEmployeeParser);
 
-        Employee employee = XMLEmployeeParser.getEmployee();
+        Employee saxEmployee = XMLEmployeeParser.getEmployee();
 
-        System.out.println("test");
+        try {
+            JAXBContext context = JAXBContext.newInstance(Employee.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            Employee jaxbEmployee = (Employee) unmarshaller.unmarshal(new File(xmlFilePath));
+            System.out.println();
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        System.out.println();
     }
 }
