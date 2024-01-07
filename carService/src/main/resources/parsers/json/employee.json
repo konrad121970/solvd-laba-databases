@@ -1,0 +1,68 @@
+{
+  "employee": {
+    "id": 1,
+    "name": "John",
+    "surname": "Doe",
+    "phoneNumber": "123-456-7890",
+    "position": "Manager",
+    "contracts": {
+      "contract": [
+        {
+          "id": 1,
+          "startDate": "2022-01-01",
+          "endDate": "2023-01-01",
+          "type": "Full-time",
+          "salary": 50000.0,
+          "active": true
+        }
+      ]
+    },
+    "monthlyPayments": {
+      "monthlyPayment": [
+        {
+          "id": 1,
+          "amount": 2000.0,
+          "paymentDate": "2022-01-15",
+          "bonusPayments": {
+            "bonusPayment": [
+              {
+                "id": 1,
+                "amount": 500.0,
+                "description": "Year-end Bonus"
+              },
+              {
+                "id": 2,
+                "amount": 1000.0,
+                "description": "Bonus"
+              }
+            ]
+          }
+        },
+        {
+          "id": 2,
+          "amount": 3000.0,
+          "paymentDate": "2022-01-16",
+          "bonusPayments": {
+            "bonusPayment": [
+              {
+                "id": 3,
+                "amount": 230.0,
+                "description": "Year-end Bonus"
+              },
+              {
+                "id": 4,
+                "amount": 12000.0,
+                "description": "Bonus"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "account": {
+      "id": 1,
+      "login": "johndoe",
+      "password": "hashed_password"
+    }
+  }
+}

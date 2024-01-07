@@ -57,6 +57,7 @@ public class ParsersMain {
 
         Employee saxEmployee = XMLEmployeeParser.getEmployee();
 
+        // ***** JAXB *****
         try {
             JAXBContext context = JAXBContext.newInstance(Employee.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -65,6 +66,8 @@ public class ParsersMain {
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
+
+        // ***** Jackson *****
 
 
         System.out.println();
