@@ -1,6 +1,7 @@
 package com.solvd.laba.parsers;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solvd.laba.parsers.model.Employee;
 import com.solvd.laba.parsers.sax.XMLEmployeeParser;
 import jakarta.xml.bind.JAXBContext;
@@ -29,6 +30,7 @@ public class ParsersMain {
 
         String xmlFilePath = "src/main/resources/parsers/xml/employee.xml";
         String xsdFilePath = "src/main/resources/parsers/xml/employee.xsd";
+        String jsonFilePath = "src/main/resources/parsers/json/employee.json";
 
         try {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -69,6 +71,14 @@ public class ParsersMain {
 
         // ***** Jackson *****
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Employee jsonEmployee = objectMapper.readValue(new File(jsonFilePath), Employee.class);
+            System.out.println();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
 
         System.out.println();
     }
