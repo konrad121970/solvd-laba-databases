@@ -1,6 +1,8 @@
 package com.solvd.laba.parsers.model.contract;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.solvd.laba.parsers.jaxb.LocalDateAdapter;
+import com.solvd.laba.parsers.json.JsonLocalDateAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -10,15 +12,21 @@ import java.time.LocalDate;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Contract {
+
     private Long id;
     @XmlElement
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @JsonDeserialize(using = JsonLocalDateAdapter.class)
     private LocalDate startDate;
     @XmlElement
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @JsonDeserialize(using = JsonLocalDateAdapter.class)
     private LocalDate endDate;
+
     private String type;
+
     private Double salary;
+
     private boolean active;
 
     public Long getId() {

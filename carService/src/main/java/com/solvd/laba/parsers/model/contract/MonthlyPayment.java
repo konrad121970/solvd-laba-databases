@@ -1,6 +1,9 @@
 package com.solvd.laba.parsers.model.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.solvd.laba.parsers.jaxb.LocalDateAdapter;
+import com.solvd.laba.parsers.json.JsonLocalDateAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -13,13 +16,17 @@ import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MonthlyPayment {
+
     private Long id;
+
     private Double amount;
     @XmlElement
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @JsonDeserialize(using = JsonLocalDateAdapter.class)
     private LocalDate paymentDate;
     @XmlElementWrapper(name = "bonusPayments")
     @XmlElement(name = "bonusPayment")
+    @JsonProperty("bonusPayments")
     private List<BonusPayment> bonusPaymentList;
 
     public MonthlyPayment() {
