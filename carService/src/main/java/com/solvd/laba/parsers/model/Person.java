@@ -1,14 +1,18 @@
 package com.solvd.laba.parsers.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class Person {
-
+    @JsonProperty
     private Long id;
+    @JsonProperty
     private String name;
+    @JsonProperty
     private String surname;
+    @JsonProperty
     private String phoneNumber;
 
     public Long getId() {

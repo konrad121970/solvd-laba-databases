@@ -1,6 +1,7 @@
 package com.solvd.laba.parsers.model;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.solvd.laba.parsers.model.contract.Contract;
 import com.solvd.laba.parsers.model.contract.MonthlyPayment;
 import jakarta.xml.bind.annotation.*;
@@ -10,8 +11,11 @@ import java.util.List;
 
 @XmlRootElement(name = "employee")
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonRootName("employee")
 public class Employee extends Person {
+    @JsonProperty
     private String position;
+    @JsonProperty
     private Account account;
     @XmlElementWrapper(name = "monthlyPayments")
     @XmlElement(name = "monthlyPayment")
