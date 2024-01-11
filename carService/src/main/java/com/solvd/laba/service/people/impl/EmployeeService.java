@@ -32,25 +32,6 @@ public class EmployeeService implements IEmployeeService {
         contractService = new ContractService();
         monthlyPaymentsService = new MonthlyPaymentService();
         serviceOrderService = new ServiceOrderService();
-
-/*        if (Config.IMPL.getValue().equals("jdbc")) {
-            employeeDAO = new EmployeeDAO();
-            contractService = new ContractService();
-            monthlyPaymentsService = new MonthlyPaymentService();
-            serviceOrderService = new ServiceOrderService();
-
-        } else if (Config.IMPL.getValue().equals("myBatis")) {
-            employeeDAO = new EmployeeMyBatisImpl();
-            contractService = new ContractService();
-            monthlyPaymentsService = new MonthlyPaymentService();
-            serviceOrderService = new ServiceOrderService();
-        } else {
-            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-            employeeDAO = new EmployeeDAO();
-            contractService = new ContractService();
-            monthlyPaymentsService = new MonthlyPaymentService();
-            serviceOrderService = new ServiceOrderService();
-        }*/
     }
 
     @Override

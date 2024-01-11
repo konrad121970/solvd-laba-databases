@@ -19,15 +19,6 @@ public class AddressService implements IAddressService {
     public AddressService() {
 
         addressDAO = RepositoryFactory.createAddressRepository(Config.IMPL.getValue());
-
-/*        if (Config.IMPL.getValue().equals("jdbc")) {
-            addressDAO = new AddressDAO();
-        } else if (Config.IMPL.getValue().equals("myBatis")) {
-            addressDAO = new AddressMyBatisImpl();
-        } else {
-            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-            addressDAO = new AddressDAO();
-        }*/
     }
 
     @Override

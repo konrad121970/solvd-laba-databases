@@ -25,18 +25,6 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
 
         monthlyPaymentDAO = RepositoryFactory.createMonthlyPaymentRepository(Config.IMPL.getValue());
         bonusPaymentService = new BonusPaymentService();
-
-//        if (Config.IMPL.getValue().equals("jdbc")) {
-//            monthlyPaymentDAO = new MonthlyPaymentDAO();
-//            bonusPaymentService = new BonusPaymentService();
-//        } else if (Config.IMPL.getValue().equals("myBatis")) {
-//            monthlyPaymentDAO = new MonthlyPaymentMyBatisImpl();
-//            bonusPaymentService = new BonusPaymentService();
-//        } else {
-//            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-//            monthlyPaymentDAO = new MonthlyPaymentDAO();
-//            bonusPaymentService = new BonusPaymentService();
-//        }
     }
 
     @Override

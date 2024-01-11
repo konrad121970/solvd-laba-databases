@@ -17,15 +17,6 @@ public class WorkshopService implements IWorkshopService {
 
     public WorkshopService() {
         workshopDAO = RepositoryFactory.createWorkshopRepository(Config.IMPL.getValue());
-
-/*        if (Config.IMPL.getValue().equals("jdbc")) {
-            workshopDAO = new WorkshopDAO();
-        } else if (Config.IMPL.getValue().equals("myBatis")) {
-            workshopDAO = new WorkshopMyBatisImpl();
-        } else {
-            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-            workshopDAO = new WorkshopDAO();
-        }*/
     }
 
     @Override

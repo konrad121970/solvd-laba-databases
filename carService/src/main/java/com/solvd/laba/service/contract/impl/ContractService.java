@@ -19,14 +19,6 @@ public class ContractService implements IContractService {
     public ContractService() {
 
         contractDAO = RepositoryFactory.createContractRepository(Config.IMPL.getValue());
-//        if (Config.IMPL.getValue().equals("jdbc")) {
-//            contractDAO = new ContractDAO();
-//        } else if (Config.IMPL.getValue().equals("myBatis")) {
-//            contractDAO = new ContractMyBatisImpl();
-//        } else {
-//            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-//            contractDAO = new ContractDAO();
-//        }
     }
 
     @Override

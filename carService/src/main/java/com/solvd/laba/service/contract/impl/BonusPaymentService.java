@@ -19,15 +19,6 @@ public class BonusPaymentService implements IBonusPaymentService {
     public BonusPaymentService() {
 
         bonusPaymentDAO = RepositoryFactory.createBonusPaymentRepository(Config.IMPL.getValue());
-
-/*        if (Config.IMPL.getValue().equals("jdbc")) {
-            bonusPaymentDAO = new BonusPaymentDAO();
-        } else if (Config.IMPL.getValue().equals("myBatis")) {
-            bonusPaymentDAO = new BonusPaymentMyBatisImpl();
-        } else {
-            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-            bonusPaymentDAO = new BonusPaymentDAO();
-        }*/
     }
 
     @Override
