@@ -3,9 +3,8 @@ package com.solvd.laba.service.people.impl;
 import com.solvd.laba.config.Config;
 import com.solvd.laba.domain.contract.Contract;
 import com.solvd.laba.domain.people.Employee;
+import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.people.IEmployeeDAO;
-import com.solvd.laba.persistence.people.impl.EmployeeDAO;
-import com.solvd.laba.persistence.people.impl.mybatis.EmployeeMyBatisImpl;
 import com.solvd.laba.service.contract.IContractService;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 import com.solvd.laba.service.contract.impl.ContractService;
@@ -29,11 +28,17 @@ public class EmployeeService implements IEmployeeService {
 
     public EmployeeService() {
 
-        if (Config.IMPL.getValue().equals("jdbc")) {
+        employeeDAO = RepositoryFactory.createEmployeeRepository(Config.IMPL.getValue());
+        contractService = new ContractService();
+        monthlyPaymentsService = new MonthlyPaymentService();
+        serviceOrderService = new ServiceOrderService();
+
+/*        if (Config.IMPL.getValue().equals("jdbc")) {
             employeeDAO = new EmployeeDAO();
             contractService = new ContractService();
             monthlyPaymentsService = new MonthlyPaymentService();
             serviceOrderService = new ServiceOrderService();
+
         } else if (Config.IMPL.getValue().equals("myBatis")) {
             employeeDAO = new EmployeeMyBatisImpl();
             contractService = new ContractService();
@@ -45,7 +50,7 @@ public class EmployeeService implements IEmployeeService {
             contractService = new ContractService();
             monthlyPaymentsService = new MonthlyPaymentService();
             serviceOrderService = new ServiceOrderService();
-        }
+        }*/
     }
 
     @Override

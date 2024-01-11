@@ -3,9 +3,8 @@ package com.solvd.laba.service.contract.impl;
 import com.solvd.laba.config.Config;
 import com.solvd.laba.domain.contract.BonusPayment;
 import com.solvd.laba.domain.contract.MonthlyPayment;
+import com.solvd.laba.persistence.RepositoryFactory;
 import com.solvd.laba.persistence.contract.IMonthlyPaymentDAO;
-import com.solvd.laba.persistence.contract.impl.MonthlyPaymentDAO;
-import com.solvd.laba.persistence.contract.impl.mybatis.MonthlyPaymentMyBatisImpl;
 import com.solvd.laba.service.contract.IBonusPaymentService;
 import com.solvd.laba.service.contract.IMonthlyPaymentsService;
 import org.apache.logging.log4j.LogManager;
@@ -24,17 +23,20 @@ public class MonthlyPaymentService implements IMonthlyPaymentsService {
 
     public MonthlyPaymentService() {
 
-        if (Config.IMPL.getValue().equals("jdbc")) {
-            monthlyPaymentDAO = new MonthlyPaymentDAO();
-            bonusPaymentService = new BonusPaymentService();
-        } else if (Config.IMPL.getValue().equals("myBatis")) {
-            monthlyPaymentDAO = new MonthlyPaymentMyBatisImpl();
-            bonusPaymentService = new BonusPaymentService();
-        } else {
-            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
-            monthlyPaymentDAO = new MonthlyPaymentDAO();
-            bonusPaymentService = new BonusPaymentService();
-        }
+        monthlyPaymentDAO = RepositoryFactory.createMonthlyPaymentRepository(Config.IMPL.getValue());
+        bonusPaymentService = new BonusPaymentService();
+
+//        if (Config.IMPL.getValue().equals("jdbc")) {
+//            monthlyPaymentDAO = new MonthlyPaymentDAO();
+//            bonusPaymentService = new BonusPaymentService();
+//        } else if (Config.IMPL.getValue().equals("myBatis")) {
+//            monthlyPaymentDAO = new MonthlyPaymentMyBatisImpl();
+//            bonusPaymentService = new BonusPaymentService();
+//        } else {
+//            LOGGER.info("{}: Data source was not specified or is invalid. Defaulting to JDBC implementation", this.getClass().getSimpleName());
+//            monthlyPaymentDAO = new MonthlyPaymentDAO();
+//            bonusPaymentService = new BonusPaymentService();
+//        }
     }
 
     @Override
