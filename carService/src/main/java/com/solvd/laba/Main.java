@@ -108,6 +108,7 @@ public class Main {
         Invoice invoice = invoiceService.getInvoiceById(1L);
 
         Product product = productService.getProductById(1L);
+        
 
         Customer customer = customerService.getCustomerById(1L);
 

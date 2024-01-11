@@ -19,7 +19,6 @@ public enum Config {
             if (input == null) {
                 throw new RuntimeException("Sorry, unable to find config.properties");
             }
-            // load properties from class path
             properties.load(input);
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,4 +38,5 @@ public enum Config {
     public String getValue() {
         return properties.getProperty(key);
     }
+    
 }
